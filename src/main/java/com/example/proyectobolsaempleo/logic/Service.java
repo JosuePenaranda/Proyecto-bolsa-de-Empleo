@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.*;
 public class Service {
     @Autowired
     private OferenteRepository oferenteRepository;
+    @Autowired
+    private EmpresaRepository empresaRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     // Buscar oferente por ID
     public Oferente oferenteFindById(String id) {
