@@ -21,4 +21,22 @@ public class Service {
     public void oferenteSave(Oferente oferente) {
         oferenteRepository.save(oferente);
     }
+
+    // Buscar
+    public Object login(String correo, String clave) {
+
+        // Buscar admin
+        Administrador admin = adminRepository.findByCorreoAndClave(correo, clave);
+        if(admin != null) return admin;
+
+        // Buscar empresa
+        Empresa empresa = empresaRepository.findByCorreoAndClave(correo, clave);
+        if(empresa != null) return empresa;
+
+        // Buscar oferente
+        Oferente oferente = oferenteRepository.findByCorreoAndClave(correo, clave);
+        if(oferente != null) return oferente;
+
+        return null;
+    }
 }
