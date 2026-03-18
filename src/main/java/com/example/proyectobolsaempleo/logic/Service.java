@@ -25,6 +25,15 @@ public class Service {
     // Buscar
     public Object login(String correo, String clave) {
 
+        // Administrador predeterminado
+        if(correo.equals("admin@una.cr") && clave.equals("root")){
+            Administrador admin = new Administrador();
+            admin.setIdentificacion("1");
+            admin.setCorreo(correo);
+            admin.setClave(clave);
+            return admin;
+        }
+
         // Buscar admin
         Administrador admin = adminRepository.findByCorreoAndClave(correo, clave);
         if(admin != null) return admin;
