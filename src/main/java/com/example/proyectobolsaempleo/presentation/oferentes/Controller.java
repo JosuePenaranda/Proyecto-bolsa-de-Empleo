@@ -15,22 +15,36 @@ public class Controller {
     // Dashboard
     @GetMapping("/presentation/oferentes/dashboard")
     public String show(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/oferentes/Dashboard";
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/oferentes/Dashboard";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
     // Mis Habilidades
     @GetMapping("/presentation/oferentes/habilidades")
     public String habilidades(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/oferentes/MisHabilidades";
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/oferentes/MisHabilidades";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
-    // Mi CV (cuando tengas la página lista)
+    // Mi CV
     @GetMapping("/presentation/oferentes/cv")
-    public String cv(Model model,HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/oferentes/MiCV";
+    public String cv(Model model, HttpSession session) {
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/oferentes/MiCV";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
-
 }

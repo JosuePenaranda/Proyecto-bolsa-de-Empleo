@@ -15,29 +15,49 @@ public class Controller {
     // Dashboard
     @GetMapping("/presentation/empresa/dashboard")
     public String show(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/empresa/Dashboard";
+        var user = session.getAttribute("usuario");;
+        if(user != null ) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/empresa/Dashboard";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
     // BuscarCandidatos
     @GetMapping("/presentation/empresa/BuscarCandidatos")
     public String BuscarCandidatos(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/empresa/BuscarCandidatos";
+        var user = session.getAttribute("usuario");;
+        if(user != null ) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/empresa/BuscarCandidatos";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
+
     }
 
     // MisPuestos
     @GetMapping("/presentation/empresa/MisPuestos")
     public String MisPuestos(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/empresa/MisPuestos";
+        var user = session.getAttribute("usuario");
+        if(user != null ) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/empresa/MisPuestos";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
     // VerDetalle
     @GetMapping("/presentation/empresa/VerDetalle")
     public String VerDetalle(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/empresa/VerDetalle";
+        var user = session.getAttribute("usuario");
+        if(user != null ) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/empresa/VerDetalle";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
-
 }
