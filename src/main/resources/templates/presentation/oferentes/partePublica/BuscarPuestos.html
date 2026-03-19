@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Buscar Puestos</title>
+
+
+    <link rel="icon" type="image/png" th:href="@{/img/logobolsaempleo.png}">
+
+    <link rel="stylesheet" th:href="@{/css/stylePublico.css}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdP..." crossorigin="anonymous">
+</head>
+<body class="bg-light">
+<main>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+
+            <!-- Imagen -->
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img th:src="@{/img/logobolsaempleo.png}" class="logo" alt="Logo">
+                BolsaEmpleo
+            </a>
+
+            <!-- Boton responsive -->
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menu -->
+            <div class="collapse navbar-collapse" id="menu">
+
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Buscar Puestos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Registro Empresas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Registro Oferente</a></li>
+                </ul>
+
+                <!-- Boton login -->
+                <button class="btn btn-outline-light btn-sm">Login</button>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido de la página -->
+
+    <div class="container mt-4">
+
+        <h5><strong>Buscar puestos por características</strong></h5>
+
+        <!-- FILTROS -->
+        <div class="card p-3 mb-3" style="background-color:#f1f1f1;">
+
+            <form th:action="@{/puestos/buscar}" method="get">
+
+                <div class="row">
+
+                    <!-- Motores -->
+                    <div class="col-md-3">
+                        <strong>Motores</strong><br>
+                        <div class="form-check">
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="motor" value="MySQL">
+                            </label>
+                            <label class="form-check-label">MySql</label>
+                        </div>
+                        <div class="form-check">
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="motor" value="Oracle">
+                            </label>
+                            <label class="form-check-label">Oracle</label>
+                        </div>
+                    </div>
+
+                    <!-- Ciberseguridad -->
+                    <div class="col-md-3">
+                        <strong>Ciberseguridad</strong><br>
+                        <div class="form-check">
+                            <label>
+                                <input class="form-check-input" type="checkbox" name="ciber" value="Seguridad">
+                            </label>
+                            <label class="form-check-label">Ciberseguridad</label>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <label>
+                            <input class="form-check-input" type="checkbox" name="motor" value="Oracle">
+                        </label>
+                        <label class="form-check-label">Oracle</label>
+                    </div>
+                </div>
+
+                <!-- Ciberseguridad -->
+                <div class="col-md-3">
+                    <strong>Ciberseguridad</strong><br>
+                    <div class="form-check">
+                        <label>
+                            <input class="form-check-input" type="checkbox" name="ciber" value="Seguridad">
+                        </label>
+                        <label class="form-check-label">Ciberseguridad</label>
+                    </div>
+                </div>
+
+                <!-- Lenguajes -->
+                <div class="col-md-3">
+                    <strong>Lenguajes de programación</strong><br>
+                    <div class="form-check">
+                        <label>
+                            <input class="form-check-input" type="checkbox" name="lenguaje" value="C#">
+                        </label>
+                        <label class="form-check-label">C#</label>
+                    </div>
+                    <div class="form-check">
+                        <label>
+                            <input class="form-check-input" type="checkbox" name="lenguaje" value="Java">
+                        </label>
+                        <label class="form-check-label">Java</label>
+                    </div>
+                    <div class="form-check">
+                        <label>
+                            <input class="form-check-input" type="checkbox" name="lenguaje" value="Kotlin">
+                        </label>
+                        <label class="form-check-label">Kotlin</label>
+                    </div>
+                </div>
+
+                <!-- Tecnologías Web -->
+                <div class="col-md-3">
+                    <strong>Tecnologías Web</strong><br>
+                    <div class="form-check">
+                        <label>
+                            <input class="form-check-input" type="checkbox" name="web" value="Web" checked>
+                        </label>
+                        <label class="form-check-label">Tecnologías Web</label>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+
+        <!-- BOTONES -->
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary btn-sm">
+                Buscar
+            </button>
+
+            <button type="reset" class="btn btn-outline-secondary btn-sm">
+                Limpiar
+            </button>
+
+        </div>
+
+        </br>
+
+        <!-- RESULTADOS -->
+        <h6><strong>Resultados</strong></h6>
+
+        <div class="card p-3" style="width: 300px;">
+            <small class="text-muted">Web Soft</small>
+            <h6 class="mb-1">Frontend Developer</h6>
+            <strong>Salario: 1200.0</strong>
+        </div>
+        </br>
+
+    </div>
+</main>
+<footer class="bg-dark text-white p-3">
+    <div class="container d-flex justify-content-between">
+        <div>
+            Bolsa de Empleo<br>
+            <small>Total Soft Inc.</small>
+        </div>
+
+        <div class="text-end">
+            Contacto info@bolsaempleo.local<br>
+            Créditos Equipo de desarrollo
+        </div>
+    </div>
+</footer>
+</body>
+</html>
