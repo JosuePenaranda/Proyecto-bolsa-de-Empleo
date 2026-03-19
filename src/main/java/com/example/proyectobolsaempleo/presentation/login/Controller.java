@@ -16,17 +16,17 @@ public class Controller {
     private Service service;
 
     // Login
-    @GetMapping("/presentation/oferentes/login/Login")
+    @GetMapping("/presentation/login/Login")
     public String show(Model model) {
-        return "presentation/oferentes/login/Login";
+        return "presentation/login/Login";
     }
 
-    @PostMapping("/presentation/oferentes/login")
+    @PostMapping("/presentation/login")
     public String validarLogin(HttpServletRequest req, @RequestParam String correo, @RequestParam String clave, Model model) {
 
         if(correo.isEmpty() || clave.isEmpty()) {
             model.addAttribute("error", "Campos vacíos");
-            return "presentation/oferentes/login/Login";
+            return "presentation/login/Login";
         }
 
         var usuario = service.login(correo, clave);
@@ -36,10 +36,10 @@ public class Controller {
 
             // Redirección dependiendo del tipo de usuario
             if(usuario instanceof Administrador) {
-                return "redirect:/presentation/oferentes/administrador/dashboard";
+                return "redirect:/presentation/administrador/dashboard";
             }
             else if(usuario instanceof Empresa){
-                return "redirect:/presentation/oferentes/empresa/dashboard";
+                return "redirect:/presentation/empresa/dashboard";
             }
             else {
                 return "redirect:/presentation/oferentes/dashboard";
@@ -47,14 +47,8 @@ public class Controller {
         }
         else {
             model.addAttribute("error", "Usuario y/o contraseña incorrectos");
-            return "presentation/oferentes/login/Login";
+            return "presentation/login/Login";
         }
     }
 
-    // Página después del login
-    @GetMapping("index")
-    public String index(Model modelo) {
-        modelo.addAttribute("primerValor", "Bienvenido");
-        return "index";
-    }
 }
