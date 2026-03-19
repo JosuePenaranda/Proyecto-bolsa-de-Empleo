@@ -1,5 +1,6 @@
 package com.example.proyectobolsaempleo.logic;
 
+import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.data.*;
 import org.springframework.beans.factory.annotation.*;
 
@@ -20,21 +21,21 @@ public class ServiceLogin {
             Administrador admin = new Administrador();
             admin.setIdentificacion("1");
             admin.setCorreo(correo);
-            admin.setClave(clave);
+            admin.setClave(PasswordUtil.hashPassword(clave));
             return admin;
         }
 
         // Buscar admin
-        Administrador admin = adminRepository.findByCorreoAndClave(correo, clave);
-        if(admin != null) return admin;
+        Administrador admin = adminRepository.findByCorreo(correo);
+        if(admin != null && PasswordUtil.verificarPassword(clave, admin.getClave())) return admin;
 
         // Buscar empresa
-        Empresa empresa = empresaRepository.findByCorreoAndClave(correo, clave);
-        if(empresa != null) return empresa;
+        Empresa empresa = empresaRepository.findByCorreo(correo);
+        if(empresa != null && PasswordUtil.verificarPassword(clave, empresa.getClave())) return empresa;
 
         // Buscar oferente
-        Oferente oferente = oferenteRepository.findByCorreoAndClave(correo, clave);
-        if(oferente != null) return oferente;
+        Oferente oferente = oferenteRepository.findByCorreo(correo);
+        if(oferente != null && PasswordUtil.verificarPassword(clave, oferente.getClave())) return oferente;
 
         return null;
     }

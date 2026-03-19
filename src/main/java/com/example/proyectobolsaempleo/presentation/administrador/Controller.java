@@ -16,30 +16,48 @@ public class Controller {
     // Dashboard
     @GetMapping("/presentation/administrador/dashboard")
     public String show(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/administrador/Dashboard";
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/administrador/Dashboard";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
     // AdminCaracteristicas
     @GetMapping("/presentation/administrador/AdminCaracteristicas")
     public String AdminCaracteristicas(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/administrador/AdministradorCaracteristicas";
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/administrador/AdministradorCaracteristicas";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
     // AdminEmpresasPendientes
     @GetMapping("/presentation/administrador/AdminEmpresasPendientes")
     public String AdminEmpresasPendientes(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/administrador/AdministradorEmpresasPendientes";
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/administrador/AdministradorEmpresasPendientes";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
 
     // AdminOferentesPendientes
     @GetMapping("/presentation/administrador/AdminOferentesPendientes")
     public String AdminOferentesPendientes(Model model, HttpSession session) {
-        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
-        return "presentation/administrador/AdministradorOferentesPendientes";
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            return "presentation/administrador/AdministradorOferentesPendientes";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
     }
-
-
 }

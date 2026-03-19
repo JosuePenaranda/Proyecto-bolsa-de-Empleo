@@ -4,6 +4,7 @@ import com.example.proyectobolsaempleo.logic.Administrador;
 import com.example.proyectobolsaempleo.logic.Empresa;
 import com.example.proyectobolsaempleo.logic.ServiceLogin;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,9 +48,16 @@ public class Controller {
             }
         }
         else {
-            model.addAttribute("error", "Usuario y/o contraseña incorrectos");
+            model.addAttribute("error", "Usuario y/o contraseña incorrectos o Administrador no ha dado acceso");
             return "presentation/login/Login";
         }
+    }
+
+    @GetMapping("/salir")
+    public String salir(HttpSession session) {
+        session.removeAttribute("usuario");
+        session.removeAttribute("correoUsuario");
+        return "/presentation/partePublica/Puestosrecienregistrados";
     }
 
 }
