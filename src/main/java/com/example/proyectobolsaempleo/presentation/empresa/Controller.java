@@ -1,6 +1,8 @@
 package com.example.proyectobolsaempleo.presentation.empresa;
 
-import com.example.proyectobolsaempleo.logic.Service;
+import com.example.proyectobolsaempleo.logic.ServiceEmpresa;
+import com.example.proyectobolsaempleo.logic.ServiceLogin;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,29 +10,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 @org.springframework.stereotype.Controller("empresas")
 public class Controller {
     @Autowired
-    private Service service;
+    private ServiceEmpresa serviceEmpresa;
 
     // Dashboard
     @GetMapping("/presentation/empresa/dashboard")
-    public String show(Model model) {
+    public String show(Model model, HttpSession session) {
+        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
         return "presentation/empresa/Dashboard";
     }
 
     // BuscarCandidatos
     @GetMapping("/presentation/empresa/BuscarCandidatos")
-    public String BuscarCandidatos(Model model) {
+    public String BuscarCandidatos(Model model, HttpSession session) {
+        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
         return "presentation/empresa/BuscarCandidatos";
     }
 
     // MisPuestos
     @GetMapping("/presentation/empresa/MisPuestos")
-    public String MisPuestos(Model model) {
+    public String MisPuestos(Model model, HttpSession session) {
+        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
         return "presentation/empresa/MisPuestos";
     }
 
     // VerDetalle
     @GetMapping("/presentation/empresa/VerDetalle")
-    public String VerDetalle(Model model) {
+    public String VerDetalle(Model model, HttpSession session) {
+        model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
         return "presentation/empresa/VerDetalle";
     }
 
