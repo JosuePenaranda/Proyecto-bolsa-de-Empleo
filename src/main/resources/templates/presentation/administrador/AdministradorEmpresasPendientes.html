@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admin - Dashboard</title>
+  <title>Admin - Empresas Pendientes</title>
 
   <link rel="icon" type="image/png" th:href="@{/img/logobolsaempleo.png}">
 
@@ -22,7 +22,7 @@
 
       <!-- Imagen -->
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <img th:src="@{/img/logobolsaempleo.png}" class="logo" alt="Logo">
+        <img src="../img/logobolsaempleo.png" class="logo">
         BolsaEmpleo
       </a>
 
@@ -63,19 +63,23 @@
   <!-- Contenido de la página -->
   <div class="container mt-2">
 
-    <h3>Administrador</h3>
-    <p>Aprobaciones, catálogos de características y reportes.</p>
-
-    <a th:href="@{/presentation/administrador/AdminEmpresasPendientes}">
-      <button class="btn btn-primary btn-sm">Empresas pendientes</button>
-    </a>
-    <a th:href="@{/presentation/administrador/AdminOferentesPendientes}">
-      <button class="btn btn-primary btn-sm">Oferentes pendientes</button>
-    </a>
-    <a th:href="@{/presentation/administrador/AdminCaracteristicas}">
-      <button class="btn btn-primary btn-sm">Características</button>
-    </a>
-    <button class="btn btn-primary btn-sm">Reportes</button>
+    <h3>Empresas Pendientes</h3>
+    <div class="container mt-4 p-4" style="background-color:#f2f2f2;">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>correo@gmail.com</td>
+          <td><button type="button" class="btn btn-success">Aprobar y generar clave</button></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </main>
 <footer class="bg-dark text-white p-3">

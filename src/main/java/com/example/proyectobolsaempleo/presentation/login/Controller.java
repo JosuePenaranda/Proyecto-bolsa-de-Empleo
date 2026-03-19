@@ -2,7 +2,7 @@ package com.example.proyectobolsaempleo.presentation.login;
 
 import com.example.proyectobolsaempleo.logic.Administrador;
 import com.example.proyectobolsaempleo.logic.Empresa;
-import com.example.proyectobolsaempleo.logic.Service;
+import com.example.proyectobolsaempleo.logic.ServiceLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @org.springframework.stereotype.Controller("login")
 public class Controller {
     @Autowired
-    private Service service;
+    private ServiceLogin serviceLogin;
 
     // Login
     @GetMapping("/presentation/login/Login")
@@ -29,10 +29,11 @@ public class Controller {
             return "presentation/login/Login";
         }
 
-        var usuario = service.login(correo, clave);
+        var usuario = serviceLogin.login(correo, clave);
 
         if(usuario != null) {
             req.getSession().setAttribute("usuario", usuario);
+            req.getSession().setAttribute("correoUsuario", correo);
 
             // Redirección dependiendo del tipo de usuario
             if(usuario instanceof Administrador) {
