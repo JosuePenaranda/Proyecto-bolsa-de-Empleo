@@ -11,9 +11,27 @@ public class Controller {
     private Service service;
 
     // Dashboard
-    @GetMapping("/presentation/oferentes/empresa/dashboard")
+    @GetMapping("/presentation/empresa/dashboard")
     public String show(Model model) {
-        return "presentation/oferentes/empresa/Dashboard";
+        return "presentation/empresa/Dashboard";
+    }
+
+    // BuscarCandidatos
+    @GetMapping("/presentation/empresa/BuscarCandidatos")
+    public String BuscarCandidatos(Model model) {
+        return "presentation/empresa/BuscarCandidatos";
+    }
+
+    // MisPuestos
+    @GetMapping("/presentation/empresa/MisPuestos")
+    public String MisPuestos(Model model) {
+        return "presentation/empresa/MisPuestos";
+    }
+
+    // VerDetalle
+    @GetMapping("/presentation/empresa/VerDetalle")
+    public String VerDetalle(Model model) {
+        return "presentation/empresa/VerDetalle";
     }
 
 }

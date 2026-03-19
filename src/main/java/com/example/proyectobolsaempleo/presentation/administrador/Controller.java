@@ -11,8 +11,8 @@ public class Controller {
     private Service service;
 
     // Dashboard
-    @GetMapping("/presentation/oferentes/administrador/dashboard")
+    @GetMapping("/presentation/administrador/dashboard")
     public String show(Model model) {
-        return "presentation/oferentes/administrador/Dashboard";
+        return "presentation/administrador/Dashboard";
     }
 }
