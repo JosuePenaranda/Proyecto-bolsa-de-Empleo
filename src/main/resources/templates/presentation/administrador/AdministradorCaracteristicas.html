@@ -22,7 +22,7 @@
 
             <!-- Imagen -->
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../img/logobolsaempleo.png" class="logo">
+                <img th:src="@{/img/logobolsaempleo.png}" class="logo" alt="Logo">
                 BolsaEmpleo
             </a>
 
@@ -74,34 +74,35 @@
 
                         <p><b>Ruta:</b></p>
 
+                        <!-- Breadcrumb dinámico -->
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item active"><a href="#">Raíces</a></li>
+                                <li class="breadcrumb-item">
+                                    <a th:href="@{/presentation/administrador/AdminCaracteristicas}">Raíces</a>
+                                </li>
+                                <li class="breadcrumb-item" th:each="nodo : ${ruta}">
+                                    <a th:href="@{/presentation/administrador/AdminCaracteristicas(actualId=${nodo.id})}"
+                                       th:text="${nodo.nombre}"></a>
+                                </li>
                             </ol>
                         </nav>
-                        <p>Categorías: <b>raíces</b></p>
 
+                        <!-- Categoría actual -->
+                        <p th:if="${actual == null}">Categorías: <b>raíces</b></p>
+                        <p th:if="${actual != null}">Subcategorías de: <b th:text="${actual.nombre}"></b></p>
+
+                        <!-- Lista -->
                         <div class="lista-scroll">
                             <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <b>Bases de Datos</b>
-                                    <button class="btn btn-outline-primary btn-sm">Entrar</button>
+                                <li class="list-group-item d-flex justify-content-between align-items-center"
+                                    th:each="c : ${caracteristicas}">
+                                    <b th:text="${c.nombre}"></b>
+                                    <a th:href="@{/presentation/administrador/AdminCaracteristicas(actualId=${c.id})}"
+                                       class="btn btn-outline-primary btn-sm">Entrar</a>
                                 </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <b>Ciberseguridad</b>
-                                    <button class="btn btn-outline-primary btn-sm">Entrar</button>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <b>Lenguaje de Programación</b>
-                                    <button class="btn btn-outline-primary btn-sm">Entrar</button>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <b>Tecnologia Web</b>
-                                    <button class="btn btn-outline-primary btn-sm">Entrar</button>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <b>Testing</b>
-                                    <button class="btn btn-outline-primary btn-sm">Entrar</button>
+                                <li class="list-group-item text-muted"
+                                    th:if="${#lists.isEmpty(caracteristicas)}">
+                                    Sin subcategorías
                                 </li>
                             </ul>
                         </div>
@@ -116,16 +117,24 @@
 
                         <h6>Agregar Característica</h6>
 
-                        <label class="form-label mt-2">Nombre</label>
-                        <input type="text ">
+                        <form method="post" th:action="@{/presentation/administrador/crearCaracteristica}">
+                            <input type="hidden" name="actualId" th:value="${actual != null ? actual.id : null}">
 
-                        <label class="form-label">Padre</label>
-                        <select class="form-select">
-                            <option>Base de datos</option>
-                            <option>Testing</option>
-                        </select>
+                            <label class="form-label mt-2">Nombre</label>
+                            <input type="text" name="nombre" class="form-control" required>
 
-                        <button class="btn btn-primary mt-3 me-auto">Crear</button>
+                            <label class="form-label mt-2">Padre</label>
+                            <select name="idPadre" class="form-select">
+                                <option value="">(sin padre)</option>
+                                <option th:each="c : ${todas}"
+                                        th:value="${c.id}"
+                                        th:text="${c.nombre}"
+                                        th:selected="${actual != null && actual.id == c.id}">
+                                </option>
+                            </select>
+
+                            <button class="btn btn-primary mt-3 me-auto">Crear</button>
+                        </form>
 
                     </div>
                 </div>

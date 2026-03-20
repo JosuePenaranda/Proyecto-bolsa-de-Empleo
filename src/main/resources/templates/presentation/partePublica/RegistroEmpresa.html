@@ -83,32 +83,32 @@
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Nombre de la Empresa</label>
-              <input type="text" name="nombre" class="form-control">
+              <input type="text" name="nombre" class="form-control" required >
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Localización</label>
-              <input type="text" name="localizacion" class="form-control">
+              <input type="text" name="localizacion" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Correo</label>
-              <input type="email" name="correo" class="form-control">
+              <input type="email" name="correo" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Teléfono</label>
-              <input type="text" name="telefono" class="form-control" inputmode="numeric">
+              <input type="text" name="telefono" class="form-control" inputmode="numeric" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Contraseña</label>
-              <input type="password" name="clave" class="form-control">
+              <input type="password" name="clave" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Descripción</label>
-              <textarea name="descripcion" class="form-control" rows="3"></textarea>
+              <textarea name="descripcion" class="form-control" rows="3" required></textarea>
             </div>
 
           </div>
@@ -118,6 +118,29 @@
           </button>
 
         </form>
+
+        <!-- Modal éxito -->
+        <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5">Solicitud enviada</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <p th:text="${mensaje}"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script th:if="${mensaje}">
+          var modal = new bootstrap.Modal(document.getElementById('modalExito'));
+          modal.show();
+        </script>
 
       </div>
 

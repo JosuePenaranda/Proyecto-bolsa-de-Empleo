@@ -2,6 +2,7 @@ package com.example.proyectobolsaempleo.presentation.login;
 
 import com.example.proyectobolsaempleo.logic.Administrador;
 import com.example.proyectobolsaempleo.logic.Empresa;
+import com.example.proyectobolsaempleo.logic.Oferente;
 import com.example.proyectobolsaempleo.logic.ServiceLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -33,6 +34,18 @@ public class Controller {
         var usuario = serviceLogin.login(correo, clave);
 
         if(usuario != null) {
+
+            // Verificar autorización para empresa y oferente
+            if(usuario instanceof Empresa empresa && !empresa.getAutorizado()) {
+                model.addAttribute("error", "Su cuenta aún no ha sido autorizada por el administrador");
+                return "presentation/login/Login";
+            }
+
+            if(usuario instanceof Oferente oferente && !oferente.getAutorizado()) {
+                model.addAttribute("error", "Su cuenta aún no ha sido autorizada por el administrador");
+                return "presentation/login/Login";
+            }
+
             req.getSession().setAttribute("usuario", usuario);
             req.getSession().setAttribute("correoUsuario", correo);
 
@@ -48,7 +61,7 @@ public class Controller {
             }
         }
         else {
-            model.addAttribute("error", "Usuario y/o contraseña incorrectos o Administrador no ha dado acceso");
+            model.addAttribute("error", "Usuario y/o contraseña incorrectos");
             return "presentation/login/Login";
         }
     }

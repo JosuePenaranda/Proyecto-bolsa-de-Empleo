@@ -1,14 +1,15 @@
 package com.example.proyectobolsaempleo.presentation.partePublica;
 
+import com.example.proyectobolsaempleo.Services.NacionalidadService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
-import com.example.proyectobolsaempleo.logic.Oferente;
-import com.example.proyectobolsaempleo.logic.ServiceOferente;
-import com.example.proyectobolsaempleo.logic.ServicePartePublica;
+import com.example.proyectobolsaempleo.logic.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @org.springframework.stereotype.Controller("partePublica")
 public class Controller {
@@ -16,6 +17,8 @@ public class Controller {
     private ServicePartePublica servicePartePublica;
     @Autowired
     private ServiceOferente serviceOferente;
+    @Autowired
+    private ServiceEmpresa serviceEmpresa;
 
     // Inicializar la página
     @GetMapping("/presentation/partePublica/Puestosrecienregistrados")
@@ -34,14 +37,17 @@ public class Controller {
     public String registroEmpresa(Model model) {
         return "presentation/partePublica/RegistroEmpresa";
     }
-
-    // RegistroOferente
-    @GetMapping("/presentation/partePublica/Registrooferente")
-    public String registroOferente(Model model) { return "presentation/partePublica/RegistroOferente";}
-
     // Login
     @GetMapping("/presentation/partePublica/login")
     public String Login(Model model) { return "presentation/login/Login";}
+
+    //Traer del excel las nacionalidades y entra a la ventana de RegistroOferente
+    @GetMapping("/presentation/partePublica/Registrooferente")
+    public String mostrarFormulario(Model model) {
+        List<Nacionalidad> nacionalidades = NacionalidadService.obtenerNacionalidades();
+        model.addAttribute("nacionalidades", nacionalidades);
+        return "presentation/partePublica/Registrooferente";
+    }
 
     // Guardar Oferente
     @PostMapping("/presentation/partePublica/Registrooferente")
@@ -71,5 +77,30 @@ public class Controller {
 
         model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
         return "presentation/partePublica/RegistroOferente";
+    }
+
+    // Guardar Empresa
+    @PostMapping("/presentation/partePublica/Registroempresa")
+    public String registrarEmpresa(@RequestParam String nombre,
+                                   @RequestParam String localizacion,
+                                   @RequestParam String correo,
+                                   @RequestParam String telefono,
+                                   @RequestParam String clave,
+                                   @RequestParam String descripcion,
+                                   Model model) {
+
+        var empresa = new Empresa();
+        empresa.setNombre(nombre);
+        empresa.setLocalizacion(localizacion);
+        empresa.setCorreo(correo);
+        empresa.setTelefono(telefono);
+        empresa.setClave(PasswordUtil.hashPassword(clave));
+        empresa.setDescripcion(descripcion);
+        empresa.setAutorizado(false);
+
+        serviceEmpresa.empresaSave(empresa);
+
+        model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
+        return "presentation/partePublica/RegistroEmpresa";
     }
 }
