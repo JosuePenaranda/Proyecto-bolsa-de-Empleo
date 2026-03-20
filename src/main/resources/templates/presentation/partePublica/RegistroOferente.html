@@ -82,42 +82,48 @@
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Identificación</label>
-              <input type="text" name="identificacion" class="form-control">
+              <input type="text" name="identificacion" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Nombre</label>
-              <input type="text" name="nombre" class="form-control">
+              <input type="text" name="nombre" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Primer Apellido</label>
-              <input type="text" name="primerApellido" class="form-control">
+              <input type="text" name="primerApellido" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Nacionalidad</label>
-              <input type="text" name="nacionalidad" class="form-control">
+              <select name="nacionalidad" class="form-select" required>
+                <option value="">-- Seleccione --</option>
+                <option th:each="nac : ${nacionalidades}"
+                        th:value="${nac.descripcion}"
+                        th:text="${nac.descripcion}">
+                </option>
+              </select>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Teléfono</label>
-              <input type="text" name="telefono" class="form-control" inputmode="numeric">
+              <input type="text" name="telefono" placeholder="Solo números" pattern="[0-9]+" title="Ingrese solo números" class="form-control">
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Correo</label>
-              <input type="email" name="correo" class="form-control">
+              <input type="email" name="correo" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Residencia</label>
-              <input type="text" name="lugarResidencia" class="form-control">
+              <input type="text" name="lugarResidencia" class="form-control" required>
             </div>
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Contraseña</label>
-              <input type="password" name="clave" class="form-control">
+              <input type="password" name="clave" class="form-control" required>
             </div>
 
           </div>
@@ -127,6 +133,29 @@
           </button>
 
         </form>
+
+        <!-- Modal éxito -->
+        <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5">Solicitud enviada</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <p th:text="${mensaje}"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script th:if="${mensaje}">
+          var modal = new bootstrap.Modal(document.getElementById('modalExito'));
+          modal.show();
+        </script>
 
       </div>
     </div>

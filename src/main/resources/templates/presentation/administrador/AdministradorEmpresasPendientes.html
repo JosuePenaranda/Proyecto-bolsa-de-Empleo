@@ -22,7 +22,7 @@
 
       <!-- Imagen -->
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="../img/logobolsaempleo.png" class="logo">
+        <img th:src="@{/img/logobolsaempleo.png}" class="logo" alt="Logo">
         BolsaEmpleo
       </a>
 
@@ -73,9 +73,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>correo@gmail.com</td>
-          <td><button type="button" class="btn btn-success">Aprobar y generar clave</button></td>
+        <tr th:each="empresa : ${empresas}">
+          <td th:text="${empresa.correo}"></td>
+          <td>
+            <form method="post" th:action="@{/presentation/administrador/aprobarEmpresa}">
+              <input type="hidden" name="id" th:value="${empresa.id}">
+              <button type="submit" class="btn btn-success">Aprobar</button>
+            </form>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(empresas)}">
+          <td colspan="2" class="text-center">No hay empresas pendientes</td>
         </tr>
         </tbody>
       </table>
