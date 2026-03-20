@@ -4,7 +4,7 @@ import com.example.proyectobolsaempleo.logic.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-
+import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +21,8 @@ public class Controller {
     private ServiceEmpresa serviceEmpresa;
     @Autowired
     private ServiceCaracteristica serviceCaracteristica;
+    @Autowired
+    private ServiceReporte serviceReporte;
 
 
     // Dashboard
@@ -121,6 +123,42 @@ public class Controller {
     public String aprobarOferente(@RequestParam String id) {
         serviceOferente.aprobarOferente(id);
         return "redirect:/presentation/administrador/AdminOferentesPendientes";
+    }
+
+    // Página del reporte
+    @GetMapping("/presentation/administrador/Reportes")
+    public String reportes(Model model, HttpSession session) {
+        var user = session.getAttribute("usuario");
+        if (user != null) {
+            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            model.addAttribute("mesActual", java.time.LocalDate.now().getMonthValue());
+            model.addAttribute("anioActual", java.time.LocalDate.now().getYear());
+            return "presentation/administrador/Reportes";
+        } else {
+            return "presentation/partePublica/Puestosrecienregistrados";
+        }
+    }
+
+    // Descarga el PDF
+    @GetMapping("/presentation/administrador/Reportes/pdf")
+    public ResponseEntity<byte[]> descargarReporte(@RequestParam int mes,
+                                                   @RequestParam int anio,
+                                                   HttpSession session) {
+        var user = session.getAttribute("usuario");
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        try {
+            byte[] pdf = serviceReporte.generarReportePuestosPorMes(mes, anio);
+            String nombreArchivo = "reporte-puestos-" + anio + "-" + String.format("%02d", mes) + ".pdf";
+            return ResponseEntity.ok()
+                    .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                    .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + nombreArchivo + "\"")
+                    .body(pdf);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }
