@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,6 +36,14 @@ public class Puesto {
 
     @Column(name = "activo")
     private Boolean activo;
+
+    @Column(name = "fecha_publicacion")
+    private LocalDate fechaPublicacion;
+
+    @PrePersist
+    protected void onCreate() {
+        this.fechaPublicacion = LocalDate.now();
+    }
 
     @OneToMany(mappedBy = "idPuesto")
     private Set<PuestoRequisito> puestoRequisitos = new LinkedHashSet<>();
