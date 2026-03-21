@@ -36,19 +36,19 @@
 
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/administrador/dashboard}">Dashboard</a>
+            <a class="nav-link" th:href="@{/administrador/dashboard}">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/administrador/AdminEmpresasPendientes}">Empresas Pendientes</a>
+            <a class="nav-link" th:href="@{/administrador/AdminEmpresasPendientes}">Empresas Pendientes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/administrador/AdminOferentesPendientes}">Oferentes Pendientes</a>
+            <a class="nav-link" th:href="@{/administrador/AdminOferentesPendientes}">Oferentes Pendientes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/administrador/AdminCaracteristicas}">Características</a>
+            <a class="nav-link" th:href="@{/administrador/AdminCaracteristicas}">Características</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/administrador/Reportes}">Reportes</a>
+            <a class="nav-link" th:href="@{/administrador/Reportes}">Reportes</a>
           </li>
         </ul>
 
@@ -78,7 +78,7 @@
         <tr th:each="empresa : ${empresas}">
           <td th:text="${empresa.correo}"></td>
           <td>
-            <form method="post" th:action="@{/presentation/administrador/aprobarEmpresa}">
+            <form method="post" th:action="@{/administrador/aprobarEmpresa}">
               <input type="hidden" name="id" th:value="${empresa.id}">
               <button type="submit" class="btn btn-success">Aprobar</button>
             </form>

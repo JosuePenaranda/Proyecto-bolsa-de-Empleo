@@ -15,7 +15,7 @@ public class ProyectoBolsaEmpleoApplication {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/presentation/partePublica/Puestosrecienregistrados";
+        return "redirect:/empresa/Puestosrecienregistrados";
     }
 
 }

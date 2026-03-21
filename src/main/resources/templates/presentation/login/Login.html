@@ -36,21 +36,21 @@
 
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/partePublica/Puestosrecienregistrados}">Pagina Principal</a>
+                        <a class="nav-link" th:href="@{/empresa/Puestosrecienregistrados}">Pagina Principal</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/partePublica/Buscarpuesto}">Buscar Puestos</a>
+                        <a class="nav-link" th:href="@{/empresa/Buscarpuesto}">Buscar Puestos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/partePublica/Registroempresa}">Registro Empresa</a>
+                        <a class="nav-link" th:href="@{/empresa/Registroempresa}">Registro Empresa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/partePublica/Registrooferente}">Registro Oferente</a>
+                        <a class="nav-link" th:href="@{/oferentes/Registrooferente}">Registro Oferente</a>
                     </li>
                 </ul>
 
                 <!-- Boton login -->
-                <a th:href="@{/presentation/partePublica/login}">
+                <a th:href="@{/Login}">
                     <button class="btn btn-outline-light btn-sm">Login</button>
                 </a>
 
@@ -78,7 +78,7 @@
                     </div>
 
                     <form class="row g-3 needs-validation" novalidate
-                          th:action="@{/presentation/login}" method="post">
+                          th:action="@{/Login}" method="post">
 
                         <div class="col-12">
                             <label class="form-label">Usuario</label>
@@ -103,7 +103,9 @@
                     </form>
 
                     <!-- Modal de error -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                         th:classappend="${hayError == 1} ? 'show d-block' : ''"
+                         th:attr="aria-hidden=${hayError == 1} ? 'false' : 'true'">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -111,21 +113,19 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <!-- Muestra el mensaje exacto que envió el controller -->
                                     <p th:text="${error}"></p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                                    <div class="modal-footer border-0">
+                                        <a th:href="@{/Login}" class="btn btn-primary">Cerrar</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Solo se ejecuta si el controller envió "error" -->
-                    <script th:if="${error}">
-                        var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-                        modal.show();
-                    </script>
+                    <!-- Fondo oscuro del modal -->
+                    <div class="modal-backdrop fade show" th:if="${hayError == 1}"></div>
             </div>
 
         <!-- Footer -->

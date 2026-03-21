@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @org.springframework.stereotype.Controller("administrador")
-public class Controller {
+public class AdminController {
+
     @Autowired
-    private ServiceAdmin serviceAdmin;
+    private HttpSession sesion;
+
     @Autowired
     private ServiceOferente serviceOferente;
     @Autowired
@@ -26,24 +28,24 @@ public class Controller {
 
 
     // Dashboard
-    @GetMapping("/presentation/administrador/dashboard")
-    public String show(Model model, HttpSession session) {
-        var user = session.getAttribute("usuario");
+    @GetMapping("/administrador/dashboard")
+    public String show(Model model) {
+        var user = sesion.getAttribute("usuario");
         if (user != null) {
-            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             return "presentation/administrador/Dashboard";
         } else {
-            return "presentation/partePublica/Puestosrecienregistrados";
+            return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
 
     // AdminCaracteristicas
-    @GetMapping("/presentation/administrador/AdminCaracteristicas")
-    public String AdminCaracteristicas(Model model, HttpSession session,
+    @GetMapping("/administrador/AdminCaracteristicas")
+    public String AdminCaracteristicas(Model model,
                                        @RequestParam(required = false) Integer actualId) {
-        var user = session.getAttribute("usuario");
+        var user = sesion.getAttribute("usuario");
         if (user != null) {
-            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
 
             if (actualId == null) {
                 model.addAttribute("caracteristicas", serviceCaracteristica.getRaices());
@@ -70,81 +72,80 @@ public class Controller {
             }
             return "presentation/administrador/AdministradorCaracteristicas";
         } else {
-            return "presentation/partePublica/Puestosrecienregistrados";
+            return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
 
-    @PostMapping("/presentation/administrador/crearCaracteristica")
+    @PostMapping("/administrador/crearCaracteristica")
     public String crearCaracteristica(@RequestParam String nombre,
                                       @RequestParam(required = false) Integer idPadre,
                                       @RequestParam(required = false) Integer actualId) {
         serviceCaracteristica.crearCaracteristica(nombre, idPadre);
         if (actualId != null) {
-            return "redirect:/presentation/administrador/AdminCaracteristicas?actualId=" + actualId;
+            return "redirect:/administrador/AdminCaracteristicas?actualId=" + actualId;
         }
-        return "redirect:/presentation/administrador/AdminCaracteristicas";
+        return "redirect:/administrador/AdminCaracteristicas";
     }
 
     // AdminEmpresasPendientes
-    @GetMapping("/presentation/administrador/AdminEmpresasPendientes")
-    public String AdminEmpresasPendientes(Model model, HttpSession session) {
-        var user = session.getAttribute("usuario");
+    @GetMapping("/administrador/AdminEmpresasPendientes")
+    public String AdminEmpresasPendientes(Model model) {
+        var user = sesion.getAttribute("usuario");
         if (user != null) {
-            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             model.addAttribute("empresas", serviceEmpresa.empresasPendientes());
             return "presentation/administrador/AdministradorEmpresasPendientes";
         } else {
-            return "presentation/partePublica/Puestosrecienregistrados";
+            return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
 
     // Aprobar Empresa
-    @PostMapping("/presentation/administrador/aprobarEmpresa")
+    @PostMapping("/administrador/aprobarEmpresa")
     public String aprobarEmpresa(@RequestParam String id) {
         serviceEmpresa.aprobarEmpresa(id);
-        return "redirect:/presentation/administrador/AdminEmpresasPendientes";
+        return "redirect:/administrador/AdminEmpresasPendientes";
     }
 
     // AdminOferentesPendientes
-    @GetMapping("/presentation/administrador/AdminOferentesPendientes")
-    public String AdminOferentesPendientes(Model model, HttpSession session) {
-        var user = session.getAttribute("usuario");
+    @GetMapping("/administrador/AdminOferentesPendientes")
+    public String AdminOferentesPendientes(Model model) {
+        var user = sesion.getAttribute("usuario");
         if (user != null) {
-            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             model.addAttribute("oferentes", serviceOferente.oferentesPendientes());
             return "presentation/administrador/AdministradorOferentesPendientes";
         } else {
-            return "presentation/partePublica/Puestosrecienregistrados";
+            return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
 
     // Aprobar Oferente
-    @PostMapping("/presentation/administrador/aprobarOferente")
+    @PostMapping("/administrador/aprobarOferente")
     public String aprobarOferente(@RequestParam String id) {
         serviceOferente.aprobarOferente(id);
-        return "redirect:/presentation/administrador/AdminOferentesPendientes";
+        return "redirect:/administrador/AdminOferentesPendientes";
     }
 
     // Página del reporte
-    @GetMapping("/presentation/administrador/Reportes")
-    public String reportes(Model model, HttpSession session) {
-        var user = session.getAttribute("usuario");
+    @GetMapping("/administrador/Reportes")
+    public String reportes(Model model) {
+        var user = sesion.getAttribute("usuario");
         if (user != null) {
-            model.addAttribute("correoUsuario", session.getAttribute("correoUsuario"));
+            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             model.addAttribute("mesActual", java.time.LocalDate.now().getMonthValue());
             model.addAttribute("anioActual", java.time.LocalDate.now().getYear());
             return "presentation/administrador/Reportes";
         } else {
-            return "presentation/partePublica/Puestosrecienregistrados";
+            return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
 
     // Descarga el PDF
-    @GetMapping("/presentation/administrador/Reportes/pdf")
+    @GetMapping("/administrador/Reportes/pdf")
     public ResponseEntity<byte[]> descargarReporte(@RequestParam int mes,
-                                                   @RequestParam int anio,
-                                                   HttpSession session) {
-        var user = session.getAttribute("usuario");
+                                                   @RequestParam int anio) {
+        var user = sesion.getAttribute("usuario");
         if (user == null) {
             return ResponseEntity.status(401).build();
         }
@@ -160,5 +161,4 @@ public class Controller {
             return ResponseEntity.internalServerError().build();
         }
     }
-
 }
