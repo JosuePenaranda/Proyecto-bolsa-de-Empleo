@@ -22,19 +22,19 @@
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/dashboard}">Dashboard</a>
+                        <a class="nav-link" th:href="@{/administrador/dashboard}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/AdminEmpresasPendientes}">Empresas Pendientes</a>
+                        <a class="nav-link" th:href="@{/administrador/AdminEmpresasPendientes}">Empresas Pendientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/AdminOferentesPendientes}">Oferentes Pendientes</a>
+                        <a class="nav-link" th:href="@{/administrador/AdminOferentesPendientes}">Oferentes Pendientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/AdminCaracteristicas}">Características</a>
+                        <a class="nav-link" th:href="@{/administrador/AdminCaracteristicas}">Características</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/presentation/administrador/Reportes}">Reportes</a>
+                        <a class="nav-link active" th:href="@{/administrador/Reportes}">Reportes</a>
                     </li>
                 </ul>
                 <span class="text-white me-3" th:text="${correoUsuario}"></span>
@@ -49,7 +49,7 @@
 
         <div class="card shadow-sm mt-3" style="max-width: 460px;">
             <div class="card-body">
-                <form th:action="@{/presentation/administrador/Reportes/pdf}" method="get" target="_blank">
+                <form th:action="@{/administrador/Reportes/pdf}" method="get" target="_blank">
                     <div class="mb-3">
                         <label for="mes" class="form-label fw-semibold">Mes</label>
                         <select id="mes" name="mes" class="form-select">

@@ -36,19 +36,19 @@
 
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/dashboard}">Dashboard</a>
+                        <a class="nav-link" th:href="@{/administrador/dashboard}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/AdminEmpresasPendientes}">Empresas Pendientes</a>
+                        <a class="nav-link" th:href="@{/administrador/AdminEmpresasPendientes}">Empresas Pendientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/AdminOferentesPendientes}">Oferentes Pendientes</a>
+                        <a class="nav-link" th:href="@{/administrador/AdminOferentesPendientes}">Oferentes Pendientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/AdminCaracteristicas}">Características</a>
+                        <a class="nav-link" th:href="@{/administrador/AdminCaracteristicas}">Características</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/presentation/administrador/Reportes}">Reportes</a>
+                        <a class="nav-link" th:href="@{/administrador/Reportes}">Reportes</a>
                     </li>
                 </ul>
 
@@ -80,10 +80,10 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a th:href="@{/presentation/administrador/AdminCaracteristicas}">Raíces</a>
+                                    <a th:href="@{/administrador/AdminCaracteristicas}">Raíces</a>
                                 </li>
                                 <li class="breadcrumb-item" th:each="nodo : ${ruta}">
-                                    <a th:href="@{/presentation/administrador/AdminCaracteristicas(actualId=${nodo.id})}"
+                                    <a th:href="@{/administrador/AdminCaracteristicas(actualId=${nodo.id})}"
                                        th:text="${nodo.nombre}"></a>
                                 </li>
                             </ol>
@@ -99,7 +99,7 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center"
                                     th:each="c : ${caracteristicas}">
                                     <b th:text="${c.nombre}"></b>
-                                    <a th:href="@{/presentation/administrador/AdminCaracteristicas(actualId=${c.id})}"
+                                    <a th:href="@{/administrador/AdminCaracteristicas(actualId=${c.id})}"
                                        class="btn btn-outline-primary btn-sm">Entrar</a>
                                 </li>
                                 <li class="list-group-item text-muted"
@@ -119,7 +119,7 @@
 
                         <h6>Agregar Característica</h6>
 
-                        <form method="post" th:action="@{/presentation/administrador/crearCaracteristica}">
+                        <form method="post" th:action="@{/administrador/crearCaracteristica}">
                             <input type="hidden" name="actualId" th:value="${actual != null ? actual.id : null}">
 
                             <label class="form-label mt-2">Nombre</label>

@@ -36,22 +36,22 @@
 
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/partePublica/Puestosrecienregistrados}">Pagina Principal</a>
+            <a class="nav-link" th:href="@{/empresa/Puestosrecienregistrados}">Pagina Principal</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/partePublica/Buscarpuesto}">Buscar Puestos</a>
+            <a class="nav-link" th:href="@{/empresa/Buscarpuesto}">Buscar Puestos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/partePublica/Registroempresa}">Registro Empresa</a>
+            <a class="nav-link" th:href="@{/empresa/Registroempresa}">Registro Empresa</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/presentation/partePublica/Registrooferente}">Registro Oferente</a>
+            <a class="nav-link" th:href="@{/oferentes/Registrooferente}">Registro Oferente</a>
           </li>
         </ul>
 
 
         <!-- Boton login -->
-        <a th:href="@{/presentation/partePublica/login}">
+        <a th:href="@{/Login}">
           <button class="btn btn-outline-light btn-sm">Login</button>
         </a>
 
@@ -135,27 +135,26 @@
         </form>
 
         <!-- Modal éxito -->
-        <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="modalExito" tabindex="-1"
+             th:classappend="${hayMensaje == 1} ? 'show d-block' : ''"
+             th:attr="aria-hidden=${hayMensaje == 1} ? 'false' : 'true'">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h1 class="modal-title fs-5">Solicitud enviada</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
               <div class="modal-body">
                 <p th:text="${mensaje}"></p>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                <a th:href="@{/oferentes/Registrooferente}" class="btn btn-primary">Cerrar</a>
               </div>
             </div>
           </div>
         </div>
 
-        <script th:if="${mensaje}">
-          var modal = new bootstrap.Modal(document.getElementById('modalExito'));
-          modal.show();
-        </script>
+        <!-- Fondo oscuro -->
+        <div class="modal-backdrop fade show" th:if="${hayMensaje == 1}"></div>
 
       </div>
     </div>

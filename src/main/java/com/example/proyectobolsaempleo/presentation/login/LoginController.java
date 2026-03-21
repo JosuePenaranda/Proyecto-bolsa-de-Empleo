@@ -13,21 +13,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @org.springframework.stereotype.Controller("login")
-public class Controller {
+public class LoginController {
     @Autowired
     private ServiceLogin serviceLogin;
 
     // Login
-    @GetMapping("/presentation/login/Login")
+    @GetMapping("/Login")
     public String show(Model model) {
         return "presentation/login/Login";
     }
 
-    @PostMapping("/presentation/login")
+    @PostMapping("/Login")
     public String validarLogin(HttpServletRequest req, @RequestParam String correo, @RequestParam String clave, Model model) {
 
         if(correo.isEmpty() || clave.isEmpty()) {
             model.addAttribute("error", "Campos vacíos");
+            model.addAttribute("hayError", 1);
             return "presentation/login/Login";
         }
 
@@ -37,12 +38,14 @@ public class Controller {
 
             // Verificar autorización para empresa y oferente
             if(usuario instanceof Empresa empresa && !empresa.getAutorizado()) {
-                model.addAttribute("error", "Su cuenta aún no ha sido autorizada por el administrador");
+                model.addAttribute("error", "Su cuenta aún no ha sido autorizada");
+                model.addAttribute("hayError", 1);
                 return "presentation/login/Login";
             }
 
             if(usuario instanceof Oferente oferente && !oferente.getAutorizado()) {
-                model.addAttribute("error", "Su cuenta aún no ha sido autorizada por el administrador");
+                model.addAttribute("error", "Su cuenta aún no ha sido autorizada");
+                model.addAttribute("hayError", 1);
                 return "presentation/login/Login";
             }
 
@@ -51,17 +54,18 @@ public class Controller {
 
             // Redirección dependiendo del tipo de usuario
             if(usuario instanceof Administrador) {
-                return "redirect:/presentation/administrador/dashboard";
+                return "redirect:/administrador/dashboard";
             }
             else if(usuario instanceof Empresa){
-                return "redirect:/presentation/empresa/dashboard";
+                return "redirect:/empresa/dashboard";
             }
             else {
-                return "redirect:/presentation/oferentes/dashboard";
+                return "redirect:/oferentes/dashboard";
             }
         }
         else {
             model.addAttribute("error", "Usuario y/o contraseña incorrectos");
+            model.addAttribute("hayError", 1);
             return "presentation/login/Login";
         }
     }
@@ -70,7 +74,7 @@ public class Controller {
     public String salir(HttpSession session) {
         session.removeAttribute("usuario");
         session.removeAttribute("correoUsuario");
-        return "/presentation/partePublica/Puestosrecienregistrados";
+        return "redirect:/empresa/Puestosrecienregistrados";
     }
 
 }
