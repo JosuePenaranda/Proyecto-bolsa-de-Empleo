@@ -1,0 +1,38 @@
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+
+        <!-- Imagen -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img th:src="@{/img/logobolsaempleo.png}" class="logo" alt="Logo">
+            BolsaEmpleo
+        </a>
+
+        <!-- Boton responsive -->
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="menu">
+
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/oferentes/dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/oferentes/habilidades}">Mis habilidades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/oferentes/cv}">Mi CV</a>
+                </li>
+            </ul>
+
+            <!-- correo usuario -->
+            <span class="text-white me-3" th:text="${correoUsuario}"></span>
+
+            <!-- Boton salir -->
+            <a class="btn btn-outline-light btn-sm" href="/salir">Salir</a>
+
+        </div>
+    </div>
+</nav>
