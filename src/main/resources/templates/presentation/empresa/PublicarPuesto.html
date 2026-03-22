@@ -32,9 +32,7 @@
                     <!-- Descripción -->
                     <div class="mb-3">
                         <label class="form-label">Descripción del puesto</label>
-                        <label>
                             <textarea name="descripcion" class="form-control" rows="3" required></textarea>
-                        </label>
                     </div>
 
                     <!-- Salario -->
@@ -48,12 +46,10 @@
                     <!-- Tipo -->
                     <div class="mb-3">
                         <label class="form-label">Tipo de publicación</label>
-                        <label>
                             <select name="tipo" class="form-select">
                                 <option value="PUBLICO">Público</option>
                                 <option value="PRIVADO">Privado</option>
                             </select>
-                        </label>
                     </div>
 
                     <!-- Características -->
@@ -64,19 +60,15 @@
 
                             <div class="row mb-2">
                                 <div class="col">
-                                    <label>
                                         <select name="caracteristicas[]" class="form-select">
                                             <option th:each="c : ${caracteristicas}"
                                                     th:value="${c.id}"
                                                     th:text="${c.nombre}">
                                             </option>
                                         </select>
-                                    </label>
                                 </div>
                                 <div class="col">
-                                    <label>
                                         <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
-                                    </label>
                                 </div>
                             </div>
 
