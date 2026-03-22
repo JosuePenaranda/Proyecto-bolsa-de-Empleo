@@ -2,6 +2,8 @@ package com.example.proyectobolsaempleo.logic;
 
 import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.LinkedList;
 import java.util.List;
 
 @org.springframework.stereotype.Service("serviceCaracteristica")
@@ -35,4 +37,13 @@ public class ServiceCaracteristica {
     public Caracteristica findById(Integer id) {
         return caracteristicaRepository.findById(id).orElse(null);
     }
+
+    public List<Caracteristica> getHojas() {
+        List<Caracteristica> todas = (List<Caracteristica>) caracteristicaRepository.findAll();
+
+        return todas.stream()
+                .filter(c -> caracteristicaRepository.findByIdPadre(c).isEmpty())
+                .toList();
+    }
+
 }

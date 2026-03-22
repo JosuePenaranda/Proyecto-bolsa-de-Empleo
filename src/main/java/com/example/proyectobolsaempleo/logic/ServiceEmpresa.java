@@ -3,6 +3,7 @@ package com.example.proyectobolsaempleo.logic;
 import com.example.proyectobolsaempleo.data.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @org.springframework.stereotype.Service("serviceEmpresa")
@@ -24,5 +25,9 @@ public class ServiceEmpresa {
             empresa.setAutorizado(true);
             empresaRepository.save(empresa);
         }
+    }
+
+    public List<Empresa> listar() {
+        return (List<Empresa>) empresaRepository.findAll();
     }
 }

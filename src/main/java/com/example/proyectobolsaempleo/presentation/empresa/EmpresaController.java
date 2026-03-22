@@ -1,6 +1,7 @@
 package com.example.proyectobolsaempleo.presentation.empresa;
 
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
+import com.example.proyectobolsaempleo.logic.ModeloDatos;
 import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
 import com.example.proyectobolsaempleo.logic.Empresa;
 import com.example.proyectobolsaempleo.logic.Puesto;
@@ -12,23 +13,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@org.springframework.stereotype.Controller("empresa")
+@Controller
 public class EmpresaController {
 
     @Autowired
     private HttpSession sesion;
 
     @Autowired
-    private ServiceEmpresa serviceEmpresa;
-
-    @Autowired
-    private ServicePuesto servicePuesto;
-
-    @Autowired
-    private CaracteristicaRepository caracteristicaRepository;
+    private ModeloDatos gestorDatos;
 
     // Dashboard
     @GetMapping("/empresa/dashboard")
@@ -79,7 +75,7 @@ public class EmpresaController {
         empresa.setDescripcion(descripcion);
         empresa.setAutorizado(false);
 
-        serviceEmpresa.empresaSave(empresa);
+        gestorDatos.getServiceEmpresa().empresaSave(empresa);
 
         model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
         model.addAttribute("hayMensaje", 1);
@@ -118,7 +114,7 @@ public class EmpresaController {
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
 
             model.addAttribute("caracteristicas",
-                    caracteristicaRepository.obtenerNodosFinales());
+                    gestorDatos.getServiceCaracteristica().getHojas());
 
             return "presentation/empresa/PublicarPuesto";
         } else {
@@ -143,7 +139,7 @@ public class EmpresaController {
         p.setTipoPublicacion(tipo);
         p.setIdEmpresa(empresa);
 
-        servicePuesto.guardarPuestoConRequisitos(p, caracteristicas, niveles);
+        gestorDatos.getServicePuesto().guardarPuestoConRequisitos(p, caracteristicas, niveles);
 
         model.addAttribute("mensaje", "Puesto publicado correctamente");
         model.addAttribute("hayMensaje", 1);

@@ -10,22 +10,16 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Controller;
 
-@org.springframework.stereotype.Controller("administrador")
+@Controller
 public class AdminController {
 
     @Autowired
     private HttpSession sesion;
 
     @Autowired
-    private ServiceOferente serviceOferente;
-    @Autowired
-    private ServiceEmpresa serviceEmpresa;
-    @Autowired
-    private ServiceCaracteristica serviceCaracteristica;
-    @Autowired
-    private ServiceReporte serviceReporte;
-
+    private ModeloDatos gestorDatos;
 
     // Dashboard
     @GetMapping("/administrador/dashboard")
@@ -48,16 +42,21 @@ public class AdminController {
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
 
             if (actualId == null) {
-                model.addAttribute("caracteristicas", serviceCaracteristica.getRaices());
+                model.addAttribute("caracteristicas",
+                        gestorDatos.getServiceCaracteristica().getRaices());
                 model.addAttribute("ruta", new ArrayList<>());
                 model.addAttribute("actual", null);
             } else {
-                Caracteristica actual = serviceCaracteristica.findById(actualId);
-                model.addAttribute("caracteristicas", serviceCaracteristica.getHijos(actualId));
+                Caracteristica actual =
+                        gestorDatos.getServiceCaracteristica().findById(actualId);
+
+                model.addAttribute("caracteristicas",
+                        gestorDatos.getServiceCaracteristica().getHijos(actualId));
                 model.addAttribute("actual", actual);
 
                 List<Caracteristica> ruta = new ArrayList<>();
                 Caracteristica temp = actual;
+
                 while (temp != null) {
                     ruta.add(0, temp);
                     temp = temp.getIdPadre();
@@ -66,10 +65,13 @@ public class AdminController {
             }
 
             if (actualId == null) {
-                model.addAttribute("todas", serviceCaracteristica.getRaices());
+                model.addAttribute("todas",
+                        gestorDatos.getServiceCaracteristica().getRaices());
             } else {
-                model.addAttribute("todas", serviceCaracteristica.getHijos(actualId));
+                model.addAttribute("todas",
+                        gestorDatos.getServiceCaracteristica().getHijos(actualId));
             }
+
             return "presentation/administrador/AdministradorCaracteristicas";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
@@ -80,7 +82,10 @@ public class AdminController {
     public String crearCaracteristica(@RequestParam String nombre,
                                       @RequestParam(required = false) Integer idPadre,
                                       @RequestParam(required = false) Integer actualId) {
-        serviceCaracteristica.crearCaracteristica(nombre, idPadre);
+
+        gestorDatos.getServiceCaracteristica()
+                .crearCaracteristica(nombre, idPadre);
+
         if (actualId != null) {
             return "redirect:/administrador/AdminCaracteristicas?actualId=" + actualId;
         }
@@ -92,9 +97,12 @@ public class AdminController {
     public String AdminEmpresasPendientes(Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
-            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
-            model.addAttribute("empresas", serviceEmpresa.empresasPendientes());
-            return "presentation/administrador/AdministradorEmpresasPendientes";
+
+                model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
+                model.addAttribute("empresas",
+                        gestorDatos.getServiceEmpresa().empresasPendientes());
+
+                return "presentation/administrador/AdministradorEmpresasPendientes";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
         }
@@ -103,7 +111,9 @@ public class AdminController {
     // Aprobar Empresa
     @PostMapping("/administrador/aprobarEmpresa")
     public String aprobarEmpresa(@RequestParam String id) {
-        serviceEmpresa.aprobarEmpresa(id);
+
+        gestorDatos.getServiceEmpresa().aprobarEmpresa(id);
+
         return "redirect:/administrador/AdminEmpresasPendientes";
     }
 
@@ -112,8 +122,11 @@ public class AdminController {
     public String AdminOferentesPendientes(Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
+
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
-            model.addAttribute("oferentes", serviceOferente.oferentesPendientes());
+            model.addAttribute("oferentes",
+                    gestorDatos.getServiceOferente().oferentesPendientes());
+
             return "presentation/administrador/AdministradorOferentesPendientes";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
@@ -123,7 +136,9 @@ public class AdminController {
     // Aprobar Oferente
     @PostMapping("/administrador/aprobarOferente")
     public String aprobarOferente(@RequestParam String id) {
-        serviceOferente.aprobarOferente(id);
+
+        gestorDatos.getServiceOferente().aprobarOferente(id);
+
         return "redirect:/administrador/AdminOferentesPendientes";
     }
 
@@ -150,8 +165,11 @@ public class AdminController {
             return ResponseEntity.status(401).build();
         }
         try {
-            byte[] pdf = serviceReporte.generarReportePuestosPorMes(mes, anio);
+            byte[] pdf = gestorDatos.getServiceReporte()
+                    .generarReportePuestosPorMes(mes, anio);
+
             String nombreArchivo = "reporte-puestos-" + anio + "-" + String.format("%02d", mes) + ".pdf";
+
             return ResponseEntity.ok()
                     .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                     .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
