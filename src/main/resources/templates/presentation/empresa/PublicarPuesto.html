@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Empresa - Publicar Puesto</title>
+
+    <link rel="icon" type="image/png" th:href="@{/img/logobolsaempleo.png}">
+    <link rel="stylesheet" th:href="@{/css/styleLogin.css}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body class="bg-light">
+<main>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img th:src="@{/img/logobolsaempleo.png}" class="logo" alt="Logo">
+                BolsaEmpleo
+            </a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/empresa/dashboard}">Dashboard</a>
+                    </li>
+                </ul>
+
+                <a th:href="@{/Login}">
+                    <button class="btn btn-outline-light btn-sm">Logout</button>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FORM -->
+    <div class="container d-flex justify-content-center mt-4 mb-4">
+
+        <div class="card shadow" style="width:700px;">
+
+            <div class="card-header text-center bg-light">
+                <h4>Publicar Puesto</h4>
+            </div>
+
+            <div class="card-body bg-light">
+
+                <form method="post" th:action="@{/empresa/PublicarPuesto}">
+
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label class="form-label">Descripción del puesto</label>
+                        <label>
+                            <textarea name="descripcion" class="form-control" rows="3" required></textarea>
+                        </label>
+                    </div>
+
+                    <!-- Salario -->
+                    <div class="mb-3">
+                        <label class="form-label">Salario ofrecido</label>
+                        <label>
+                            <input type="number" name="salario" class="form-control" required>
+                        </label>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de publicación</label>
+                        <label>
+                            <select name="tipo" class="form-select">
+                                <option value="PUBLICO">Público</option>
+                                <option value="PRIVADO">Privado</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- Características -->
+                    <div class="mb-3">
+                        <label class="form-label">Características requeridas</label>
+
+                        <div id="caracteristicas-container">
+
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <label>
+                                        <select name="caracteristicas[]" class="form-select">
+                                            <option th:each="c : ${caracteristicas}"
+                                                    th:value="${c.id}"
+                                                    th:text="${c.nombre}">
+                                            </option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    <label>
+                                        <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="agregarCaracteristica()">
+                            + Agregar otra
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mt-2">
+                        Publicar Puesto
+                    </button>
+
+                </form>
+
+                <!-- MODAL -->
+                <div class="modal fade" id="modalExito" tabindex="-1"
+                     th:classappend="${hayMensaje == 1} ? 'show d-block' : ''"
+                     th:attr="aria-hidden=${hayMensaje == 1} ? 'false' : 'true'">
+
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title">Puesto publicado</h5>
+                            </div>
+
+                            <div class="modal-body">
+                                <p th:text="${mensaje}"></p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <a th:href="@{/empresa/dashboard}" class="btn btn-primary">Cerrar</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-backdrop fade show" th:if="${hayMensaje == 1}"></div>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-dark text-white p-3">
+    <div class="container d-flex justify-content-between">
+        <div>
+            Bolsa de Empleo<br>
+            <small>Total Soft Inc.</small>
+        </div>
+
+        <div class="text-end">
+            Contacto info@bolsaempleo.local<br>
+            Créditos Equipo de desarrollo
+        </div>
+    </div>
+</footer>
+
+
+<script>
+    function agregarCaracteristica() {
+        let container = document.getElementById("caracteristicas-container");
+
+        let html = `
+    <div class="row mb-2">
+      <div class="col">
+        <input type="text" name="caracteristicas[]" class="form-control" placeholder="Característica">
+      </div>
+      <div class="col">
+        <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
+      </div>
+    </div>`;
+
+        container.insertAdjacentHTML('beforeend', html);
+    }
+</script>
+
+</body>
+</html>

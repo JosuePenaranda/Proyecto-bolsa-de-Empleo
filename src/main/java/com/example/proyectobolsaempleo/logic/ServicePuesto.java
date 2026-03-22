@@ -1,5 +1,6 @@
 package com.example.proyectobolsaempleo.logic;
 
+import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
 import com.example.proyectobolsaempleo.data.PuestoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
@@ -9,6 +10,9 @@ public class ServicePuesto {
 
     @Autowired
     private PuestoRepository puestoRepository;
+
+    @Autowired
+    private CaracteristicaRepository caracteristicaRepository;
 
     public List<Puesto> getPuestosPorMes(int mes, int anio) {
         return puestoRepository.findByMesYAnio(mes, anio);
@@ -23,6 +27,32 @@ public class ServicePuesto {
     }
 
     public void guardarPuesto(Puesto puesto) {
+        puestoRepository.save(puesto);
+    }
+
+    public void guardarPuestoConRequisitos(Puesto puesto,
+                                           List<Integer> ids,
+                                           List<Integer> niveles) {
+
+        for (int i = 0; i < ids.size(); i++) {
+
+            Caracteristica c = caracteristicaRepository
+                    .findById(ids.get(i))
+                    .orElse(null);
+
+            if (c != null) {
+
+                PuestoRequisito pr = new PuestoRequisito();
+                pr.setIdPuesto(puesto);
+                pr.setIdCaracteristica(c);
+                pr.setNivel(niveles.get(i));
+
+                puesto.getPuestoRequisitos().add(pr);
+            }
+        }
+
+        puesto.setActivo(true);
+
         puestoRepository.save(puesto);
     }
 

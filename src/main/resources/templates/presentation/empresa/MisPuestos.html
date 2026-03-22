@@ -41,7 +41,10 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/empresa/MisPuestos}">Mis Puestos</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#">Publicar Puesto</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/empresa/PublicarPuesto}">Publicar Puesto</a>
+                    </li>
+
                 </ul>
 
                 <!-- correo usuario -->
@@ -59,7 +62,10 @@
 
         <h3>Mis puestos</h3>
 
-        <button class="btn btn-primary btn-sm">Publicar puesto</button>
+        <a th:href="@{/empresa/PublicarPuesto}" class="btn btn-primary btn-sm ">
+            Publicar puesto
+        </a>
+
 
         <br/>
 

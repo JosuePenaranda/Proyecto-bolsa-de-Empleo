@@ -1,14 +1,19 @@
 package com.example.proyectobolsaempleo.presentation.empresa;
 
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
+import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
 import com.example.proyectobolsaempleo.logic.Empresa;
+import com.example.proyectobolsaempleo.logic.Puesto;
 import com.example.proyectobolsaempleo.logic.ServiceEmpresa;
+import com.example.proyectobolsaempleo.logic.ServicePuesto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @org.springframework.stereotype.Controller("empresa")
 public class EmpresaController {
@@ -19,6 +24,11 @@ public class EmpresaController {
     @Autowired
     private ServiceEmpresa serviceEmpresa;
 
+    @Autowired
+    private ServicePuesto servicePuesto;
+
+    @Autowired
+    private CaracteristicaRepository caracteristicaRepository;
 
     // Dashboard
     @GetMapping("/empresa/dashboard")
@@ -100,13 +110,54 @@ public class EmpresaController {
         }
     }
 
+    @GetMapping("/empresa/PublicarPuesto")
+    public String mostrarFormularioPuesto(Model model) {
+        var user = sesion.getAttribute("usuario");
+
+        if (user != null) {
+            model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
+
+            model.addAttribute("caracteristicas",
+                    caracteristicaRepository.obtenerNodosFinales());
+
+            return "presentation/empresa/PublicarPuesto";
+        } else {
+            return "redirect:/empresa/Puestosrecienregistrados";
+        }
+    }
+
+    @PostMapping("/empresa/publicarPuesto")
+    public String publicarPuesto(
+            @RequestParam String descripcion,
+            @RequestParam Double salario,
+            @RequestParam String tipo,
+            @RequestParam("caracteristicas[]") List<Integer> caracteristicas,
+            @RequestParam("niveles[]") List<Integer> niveles,
+            Model model) {
+
+        Empresa empresa = (Empresa) sesion.getAttribute("usuario");
+
+        Puesto p = new Puesto();
+        p.setDescripcion(descripcion);
+        p.setSalario(salario);
+        p.setTipoPublicacion(tipo);
+        p.setIdEmpresa(empresa);
+
+        servicePuesto.guardarPuestoConRequisitos(p, caracteristicas, niveles);
+
+        model.addAttribute("mensaje", "Puesto publicado correctamente");
+        model.addAttribute("hayMensaje", 1);
+
+        return "presentation/empresa/PublicarPuesto";
+    }
+
     // VerDetalle
     @GetMapping("/empresa/VerDetalle")
     public String VerDetalle(Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
-            return "presentation/empresa/VerDetalle";
+            return "presentation/empresa/VerDetalles";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
         }
