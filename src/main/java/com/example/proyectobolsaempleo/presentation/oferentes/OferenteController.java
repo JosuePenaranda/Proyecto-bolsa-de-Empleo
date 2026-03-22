@@ -2,17 +2,16 @@ package com.example.proyectobolsaempleo.presentation.oferentes;
 
 import com.example.proyectobolsaempleo.Services.NacionalidadService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
-import com.example.proyectobolsaempleo.logic.ModeloDatos;
-import com.example.proyectobolsaempleo.logic.Nacionalidad;
-import com.example.proyectobolsaempleo.logic.Oferente;
-import com.example.proyectobolsaempleo.logic.ServiceOferente;
+import com.example.proyectobolsaempleo.logic.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @org.springframework.stereotype.Controller("oferentes")
@@ -22,7 +21,7 @@ public class OferenteController {
     private HttpSession sesion;
 
     @Autowired
-    private ModeloDatos gestorDatos;
+    private ServiceDatos gestorDatos;
 
     // Dashboard
     @GetMapping("/oferentes/dashboard")
@@ -38,26 +37,95 @@ public class OferenteController {
 
     // Mis Habilidades
     @GetMapping("/oferentes/habilidades")
-    public String habilidades(Model model) {
+    public String habilidades(@RequestParam(required = false) Integer actualId, Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
+            Oferente oferente = (Oferente) sesion.getAttribute("usuario");
+
+            Caracteristica actual = actualId != null
+                    ? gestorDatos.getServiceCaracteristica().findById(actualId)
+                    : null;
+
+            List<Caracteristica> hijos = gestorDatos.getServiceCaracteristica().getHijos(actualId);
+            List<Caracteristica> ruta = gestorDatos.getServiceCaracteristica().obtenerRuta(actualId);
+            List<Habilidad> habilidades = gestorDatos.getServiceHabilidad().listarPorOferente(oferente);
+
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
+            model.addAttribute("actual", actual);
+            model.addAttribute("caracteristicas", hijos);
+            model.addAttribute("ruta", ruta);
+            model.addAttribute("habilidades", habilidades);
+            model.addAttribute("esHoja", hijos.isEmpty());
+
             return "presentation/oferentes/MisHabilidades";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
 
-    // Mi CV
+    // Agregar Habilidad
+    @PostMapping("/oferentes/habilidades")
+    public String agregarHabilidad(@RequestParam Integer idCaracteristica,
+                                   @RequestParam Integer nivel) {
+        Oferente oferente = (Oferente) sesion.getAttribute("usuario");
+        Caracteristica caracteristica = gestorDatos.getServiceCaracteristica().findById(idCaracteristica);
+
+        // Validar que no exista ya
+        if (gestorDatos.getServiceHabilidad().yaExiste(oferente, caracteristica)) {
+            return "redirect:/oferentes/habilidades?actualId=" + idCaracteristica;
+        }
+
+        Habilidad h = new Habilidad();
+        h.setIdOferente(oferente);
+        h.setIdCaracteristica(caracteristica);
+        h.setNivel(nivel);
+
+        gestorDatos.getServiceHabilidad().guardar(h);
+
+        return "redirect:/oferentes/habilidades";
+    }
+
+    // Actualizar Habilidad
+    @PostMapping("/oferentes/actualizarHabilidad")
+    public String actualizarHabilidad(@RequestParam Integer idHabilidad,
+                                      @RequestParam Integer nivel) {
+        gestorDatos.getServiceHabilidad().actualizar(idHabilidad, nivel);
+        return "redirect:/oferentes/habilidades";
+    }
+
     @GetMapping("/oferentes/cv")
     public String cv(Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
+            Oferente oferente = (Oferente) sesion.getAttribute("usuario");
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
+            model.addAttribute("curriculum", oferente.getCurriculum());
             return "presentation/oferentes/MiCV";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
         }
+    }
+
+    // Subir CV
+    @PostMapping("/oferentes/cv")
+    public String subirCV(@RequestParam("archivo") MultipartFile archivo, Model model) {
+        Oferente oferente = (Oferente) sesion.getAttribute("usuario");
+
+        try {
+            gestorDatos.getServiceOferente().guardarCurriculum(oferente.getIdentificacion(), archivo);
+
+            // Actualizar el oferente en sesión
+            Oferente actualizado = gestorDatos.getServiceOferente().buscarPorId(oferente.getIdentificacion());
+            sesion.setAttribute("usuario", actualizado);
+
+            model.addAttribute("mensaje", "CV subido correctamente");
+        } catch (IOException e) {
+            model.addAttribute("mensaje", "Error al subir el CV");
+        }
+
+        model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
+        model.addAttribute("curriculum", gestorDatos.getServiceOferente().buscarPorId(oferente.getIdentificacion()).getCurriculum());
+        return "presentation/oferentes/MiCV";
     }
 
     // Registro Oferente (Parte Publica)

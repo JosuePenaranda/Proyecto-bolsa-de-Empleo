@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModeloDatos {
+public class ServiceDatos {
 
     @Autowired
     private ServiceAdministrador serviceAdministrador;
@@ -27,6 +27,9 @@ public class ModeloDatos {
     @Autowired
     private ServiceReporte serviceReporte;
 
+    @Autowired
+    private ServiceHabilidad serviceHabilidad;
+
     // Getters
     public ServiceAdministrador getServiceAdministrador() { return serviceAdministrador; }
     public ServiceCaracteristica getServiceCaracteristica() { return serviceCaracteristica; }
@@ -35,5 +38,6 @@ public class ModeloDatos {
     public ServiceLogin getServiceLogin() { return serviceLogin; }
     public ServicePuesto getServicePuesto() { return servicePuesto; }
     public ServiceReporte getServiceReporte() { return serviceReporte; }
+    public ServiceHabilidad getServiceHabilidad() { return serviceHabilidad; }
 
 }

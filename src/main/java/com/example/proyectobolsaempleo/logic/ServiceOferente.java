@@ -5,7 +5,12 @@ import com.example.proyectobolsaempleo.data.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,5 +37,22 @@ public class ServiceOferente {
 
     public List<Oferente> listar() {
         return (List<Oferente>) oferenteRepository.findAll();
+    }
+
+    public void guardarCurriculum(String identificacion, MultipartFile archivo) throws IOException {
+        String nombreArchivo = identificacion + ".pdf";
+        Path ruta = Paths.get("uploads/cvs/" + nombreArchivo);
+        Files.createDirectories(ruta.getParent());
+        Files.write(ruta, archivo.getBytes());
+
+        Oferente oferente = oferenteRepository.findById(identificacion).orElse(null);
+        if (oferente != null) {
+            oferente.setCurriculum("uploads/cvs/" + nombreArchivo);
+            oferenteRepository.save(oferente);
+        }
+    }
+
+    public Oferente buscarPorId(String id) {
+        return oferenteRepository.findById(id).orElse(null);
     }
 }

@@ -75,12 +75,10 @@
                             <input type="hidden" name="actualId" th:value="${actual != null ? actual.id : null}">
 
                             <label class="form-label mt-2">Nombre</label>
-                            <label>
-                                <input type="text" name="nombre" class="form-control" required>
-                            </label>
+                            <input type="text" name="nombre" class="form-control" required>
+
 
                             <label class="form-label mt-2">Padre</label>
-                            <label>
                                 <select name="idPadre" class="form-select">
                                     <option value="">(sin padre)</option>
                                     <option th:each="c : ${todas}"
@@ -89,7 +87,6 @@
                                             th:selected="${actual != null && actual.id == c.id}">
                                     </option>
                                 </select>
-                            </label>
 
                             <button class="btn btn-primary mt-3 me-auto">Crear</button>
                         </form>

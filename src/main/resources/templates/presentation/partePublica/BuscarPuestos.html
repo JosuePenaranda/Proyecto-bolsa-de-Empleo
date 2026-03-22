@@ -2,144 +2,119 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <title>Buscar Puestos</title>
-
     <div th:replace="/presentation/fragmentos/head :: baseHead"></div>
-
     <link rel="stylesheet" th:href="@{/css/stylePublico.css}">
-
 </head>
 <body class="bg-light">
 
-    <!-- Nav -->
-    <div th:replace="/presentation/fragmentos/navPartePublica :: nav"></div>
+<div th:replace="/presentation/fragmentos/navPartePublica :: nav"></div>
 
 <main>
-
-    <!-- Contenido de la página -->
-
     <div class="container mt-4">
 
         <h5><strong>Buscar puestos por características</strong></h5>
 
         <!-- FILTROS -->
         <div class="card p-3 mb-3" style="background-color:#f1f1f1;">
-
-            <form th:action="@{/puestos/buscar}" method="get">
-
+            <form th:action="@{/empresa/Buscarpuesto/buscar}" method="get">
                 <div class="row">
+                    <div class="col-md-12">
+                        <div th:each="padre : ${raices}">
 
-                    <!-- Motores -->
-                    <div class="col-md-3">
-                        <strong>Motores</strong><br>
-                        <div class="form-check">
-                            <label>
-                                <input class="form-check-input" type="checkbox" name="motor" value="MySQL">
-                            </label>
-                            <label class="form-check-label">MySql</label>
+                            <!-- Padre -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="caracteristicas" th:value="${padre.id}"
+                                       th:checked="${seleccionadas != null && seleccionadas.contains(padre.id)}">
+                                <label class="form-check-label fw-bold" th:text="${padre.nombre}"></label>
+                            </div>
+
+                            <!-- Hijos con sangría -->
+                            <div th:each="hijo : ${padre.caracteristicas}" style="margin-left: 20px;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           name="caracteristicas" th:value="${hijo.id}"
+                                           th:checked="${seleccionadas != null && seleccionadas.contains(hijo.id)}">
+                                    <label class="form-check-label" th:text="${hijo.nombre}"></label>
+                                </div>
+
+                                <!-- Nietos con más sangría -->
+                                <div th:each="nieto : ${hijo.caracteristicas}" style="margin-left: 20px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="caracteristicas" th:value="${nieto.id}"
+                                               th:checked="${seleccionadas != null && seleccionadas.contains(nieto.id)}">
+                                        <label class="form-check-label" th:text="${nieto.nombre}"></label>
+                                    </div>
+
+                                    <!-- Bisnietos con más sangría -->
+                                    <div th:each="bisnieto : ${nieto.caracteristicas}" style="margin-left: 20px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="caracteristicas" th:value="${bisnieto.id}"
+                                                   th:checked="${seleccionadas != null && seleccionadas.contains(bisnieto.id)}">
+                                            <label class="form-check-label" th:text="${bisnieto.nombre}"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="form-check">
-                            <label>
-                                <input class="form-check-input" type="checkbox" name="motor" value="Oracle">
-                            </label>
-                            <label class="form-check-label">Oracle</label>
-                        </div>
-                    </div>
-
-                    <!-- Ciberseguridad -->
-                    <div class="col-md-3">
-                        <strong>Ciberseguridad</strong><br>
-                        <div class="form-check">
-                            <label>
-                                <input class="form-check-input" type="checkbox" name="ciber" value="Seguridad">
-                            </label>
-                            <label class="form-check-label">Ciberseguridad</label>
-                        </div>
-                    </div>
-                    <div class="form-check">
-                        <label>
-                            <input class="form-check-input" type="checkbox" name="motor" value="Oracle">
-                        </label>
-                        <label class="form-check-label">Oracle</label>
                     </div>
                 </div>
 
-                <!-- Ciberseguridad -->
-                <div class="col-md-3">
-                    <strong>Ciberseguridad</strong><br>
-                    <div class="form-check">
-                        <label>
-                            <input class="form-check-input" type="checkbox" name="ciber" value="Seguridad">
-                        </label>
-                        <label class="form-check-label">Ciberseguridad</label>
-                    </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+                    <a th:href="@{/empresa/Buscarpuesto}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
                 </div>
-
-                <!-- Lenguajes -->
-                <div class="col-md-3">
-                    <strong>Lenguajes de programación</strong><br>
-                    <div class="form-check">
-                        <label>
-                            <input class="form-check-input" type="checkbox" name="lenguaje" value="C#">
-                        </label>
-                        <label class="form-check-label">C#</label>
-                    </div>
-                    <div class="form-check">
-                        <label>
-                            <input class="form-check-input" type="checkbox" name="lenguaje" value="Java">
-                        </label>
-                        <label class="form-check-label">Java</label>
-                    </div>
-                    <div class="form-check">
-                        <label>
-                            <input class="form-check-input" type="checkbox" name="lenguaje" value="Kotlin">
-                        </label>
-                        <label class="form-check-label">Kotlin</label>
-                    </div>
-                </div>
-
-                <!-- Tecnologías Web -->
-                <div class="col-md-3">
-                    <strong>Tecnologías Web</strong><br>
-                    <div class="form-check">
-                        <label>
-                            <input class="form-check-input" type="checkbox" name="web" value="Web" checked>
-                        </label>
-                        <label class="form-check-label">Tecnologías Web</label>
-                    </div>
-                </div>
-
             </form>
         </div>
 
-
-        <!-- BOTONES -->
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary btn-sm">
-                Buscar
-            </button>
-
-            <button type="reset" class="btn btn-outline-secondary btn-sm">
-                Limpiar
-            </button>
-
-        </div>
-
-        </br>
-
         <!-- RESULTADOS -->
-        <h6><strong>Resultados</strong></h6>
+        <div th:if="${puestos != null}">
+            <h6><strong>Resultados</strong></h6>
 
-        <div class="card p-3" style="width: 300px;">
-            <small class="text-muted">Web Soft</small>
-            <h6 class="mb-1">Frontend Developer</h6>
-            <strong>Salario: 1200.0</strong>
+            <div class="row g-3">
+                <div class="col-4" th:each="p : ${puestos}">
+                    <div class="card p-3" style="background-color:#EBFFEC;">
+                        <small class="text-muted" th:text="${p.idEmpresa.nombre}"></small>
+                        <h6 class="mb-1" th:text="${p.descripcion}"></h6>
+                        <strong>$ <span th:text="${p.salario}"></span></strong>
+                        <small class="text-muted">
+                            ₡ <span th:text="${#numbers.formatDecimal(p.salario * tipoCambio.venta, 0, 'COMMA', 2, 'POINT')}"></span>
+                        </small>
+
+                        <!-- Detalle -->
+                        <div class="dropdown mt-2">
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown">
+                                Ver detalle
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header"><b>Características requeridas</b></li>
+                                <li th:each="req : ${p.puestoRequisitos}">
+                                    <span class="dropdown-item">
+                                        <span th:text="${req.idCaracteristica.nombre}"></span>
+                                        — Nivel <span th:text="${req.nivel}"></span>
+                                    </span>
+                                </li>
+                                <li th:if="${#sets.isEmpty(p.puestoRequisitos)}">
+                                    <span class="dropdown-item text-muted">Sin requisitos</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-muted" th:if="${#lists.isEmpty(puestos)}">
+                    No se encontraron puestos con esas características.
+                </p>
+            </div>
         </div>
-        </br>
 
     </div>
 </main>
 
-<!-- FOOTER -->
 <div th:replace="/presentation/fragmentos/footer :: footer"></div>
 
 </body>

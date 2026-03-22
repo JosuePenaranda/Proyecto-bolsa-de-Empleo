@@ -18,4 +18,10 @@ public class ServiceAdministrador {
         return (List<Administrador>) adminRepository.findAll();
     }
 
+    public Administrador buscarPorId(String id) {
+        return adminRepository.findById(id).orElse(null);
+    }
+    public void guardar(Administrador administrador) {
+        adminRepository.save(administrador);
+    }
 }

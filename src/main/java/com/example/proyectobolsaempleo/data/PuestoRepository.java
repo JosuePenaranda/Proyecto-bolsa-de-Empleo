@@ -23,4 +23,13 @@ public interface PuestoRepository extends CrudRepository<Puesto, Integer> {
             "WHERE pr.idPuesto.id = :idPuesto")
     List<PuestoRequisito> findRequisitorByPuesto(@Param("idPuesto") Integer idPuesto);
 
+    @Query("SELECT p FROM Puesto p WHERE p.tipoPublicacion = 'PUBLICA' AND p.activo = true ORDER BY p.fechaPublicacion DESC LIMIT 5")
+    List<Puesto> findTop5Publicos();
+
+    @Query("SELECT DISTINCT p FROM Puesto p " +
+            "JOIN p.puestoRequisitos pr " +
+            "WHERE p.tipoPublicacion = 'PUBLICA' AND p.activo = true " +
+            "AND pr.idCaracteristica.id IN :ids " +
+            "ORDER BY p.fechaPublicacion DESC")
+    List<Puesto> findByCaracteristicas(@Param("ids") List<Integer> ids);
 }

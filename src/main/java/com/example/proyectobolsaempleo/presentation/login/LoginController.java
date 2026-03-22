@@ -1,6 +1,6 @@
 package com.example.proyectobolsaempleo.presentation.login;
 
-import com.example.proyectobolsaempleo.logic.ModeloDatos;
+import com.example.proyectobolsaempleo.logic.ServiceDatos;
 import com.example.proyectobolsaempleo.logic.Administrador;
 import com.example.proyectobolsaempleo.logic.Empresa;
 import com.example.proyectobolsaempleo.logic.Oferente;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     @Autowired
-    private ModeloDatos gestorDatos;
+    private ServiceDatos gestorDatos;
     
     // Login
     @GetMapping("/Login")
