@@ -3,6 +3,8 @@ package com.example.proyectobolsaempleo.logic;
 import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
 import com.example.proyectobolsaempleo.data.PuestoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Service("servicePuesto")
@@ -58,5 +60,33 @@ public class ServicePuesto {
 
     public List<Puesto> getTodos() {
         return (List<Puesto>) puestoRepository.findAll();
+    }
+
+    public List<Puesto> getTop5Publicos() {
+        return puestoRepository.findTop5Publicos();
+    }
+
+    public List<Puesto> buscarPorCaracteristicas(List<Integer> idsSeleccionados) {
+        if (idsSeleccionados == null || idsSeleccionados.isEmpty()) {
+            return getTop5Publicos();
+        }
+
+        // Expandir padres — si seleccionó un padre incluir sus hijos
+        List<Integer> idsExpandidos = new ArrayList<>();
+        for (Integer id : idsSeleccionados) {
+            Caracteristica c = caracteristicaRepository.findById(id).orElse(null);
+            if (c != null) {
+                List<Caracteristica> hijos = caracteristicaRepository.findByIdPadre(c);
+                if (hijos.isEmpty()) {
+                    // Es hoja, agregar directo
+                    idsExpandidos.add(id);
+                } else {
+                    // Es padre, agregar todos sus hijos
+                    hijos.forEach(h -> idsExpandidos.add(h.getId()));
+                }
+            }
+        }
+
+        return puestoRepository.findByCaracteristicas(idsExpandidos);
     }
 }

@@ -2,28 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <title>Admin - Reportes</title>
-
     <div th:replace="/presentation/fragmentos/head :: baseHead"></div>
-
     <link rel="stylesheet" th:href="@{/css/styleAdministrador.css}">
-
 </head>
 <body>
 
-    <!-- Nav -->
-    <div th:replace="/presentation/fragmentos/navAdministrador :: nav"></div>
+<div th:replace="/presentation/fragmentos/navAdministrador :: nav"></div>
 
 <main>
-
     <div class="container mt-4">
         <h3>Reporte de Puestos por Mes</h3>
-        <p class="text-muted">Seleccioná el mes y año para generar el PDF.</p>
+        <p class="text-muted">Seleccioná el mes y año para generar el reporte.</p>
 
         <div class="card shadow-sm mt-3" style="max-width: 460px;">
             <div class="card-body">
-                <form th:action="@{/administrador/Reportes/pdf}" method="get" target="_blank">
+                <form id="formReporte" th:action="@{/administrador/Reportes/pdf}" method="get">
                     <div class="mb-3">
-                        <label for="mes" class="form-label fw-semibold">Mes</label>
                         <select id="mes" name="mes" class="form-select">
                             <option value="1"  th:selected="${mesActual == 1}">Enero</option>
                             <option value="2"  th:selected="${mesActual == 2}">Febrero</option>
@@ -40,20 +34,29 @@
                         </select>
                     </div>
                     <div class="mb-4">
-                        <label for="anio" class="form-label fw-semibold">Año</label>
                         <input type="number" id="anio" name="anio" class="form-control"
                                th:value="${anioActual}" min="2020" max="2099" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
-                        Generar y Descargar Reporte PDF
+                        Generar Reporte
                     </button>
                 </form>
             </div>
         </div>
+
+        <!-- Mostrar PDF -->
+        <div class="card shadow-sm mt-4" th:if="${urlReporte != null}">
+            <div class="card-body p-0">
+                <object th:data="${urlReporte}" type="application/pdf"
+                        width="100%" height="700px">
+                    <p class="text-muted p-3">No se puede mostrar el PDF en este navegador.</p>
+                </object>
+            </div>
+        </div>
+
     </div>
 </main>
 
-<<!-- FOOTER -->
 <div th:replace="/presentation/fragmentos/footer :: footer"></div>
 
 </body>

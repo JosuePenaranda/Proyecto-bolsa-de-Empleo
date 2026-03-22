@@ -19,7 +19,7 @@ public class AdminController {
     private HttpSession sesion;
 
     @Autowired
-    private ModeloDatos gestorDatos;
+    private ServiceDatos gestorDatos;
 
     // Dashboard
     @GetMapping("/administrador/dashboard")
@@ -142,14 +142,20 @@ public class AdminController {
         return "redirect:/administrador/AdminOferentesPendientes";
     }
 
-    // Página del reporte
     @GetMapping("/administrador/Reportes")
-    public String reportes(Model model) {
+    public String reportes(@RequestParam(required = false) Integer mes,
+                           @RequestParam(required = false) Integer anio,
+                           Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
-            model.addAttribute("mesActual", java.time.LocalDate.now().getMonthValue());
-            model.addAttribute("anioActual", java.time.LocalDate.now().getYear());
+            model.addAttribute("mesActual", mes != null ? mes : java.time.LocalDate.now().getMonthValue());
+            model.addAttribute("anioActual", anio != null ? anio : java.time.LocalDate.now().getYear());
+
+            if (mes != null && anio != null) {
+                model.addAttribute("urlReporte", "/administrador/Reportes/pdf?mes=" + mes + "&anio=" + anio);
+            }
+
             return "presentation/administrador/Reportes";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
@@ -173,7 +179,7 @@ public class AdminController {
             return ResponseEntity.ok()
                     .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                     .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + nombreArchivo + "\"")
+                            "inline; filename=\"" + nombreArchivo + "\"")
                     .body(pdf);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

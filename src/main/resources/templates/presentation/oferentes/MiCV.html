@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Oferente - Mi CV</title>
+    <div th:replace="/presentation/fragmentos/head :: baseHead"></div>
+    <link rel="stylesheet" th:href="@{/css/styleOferente.css}">
+</head>
+<body>
+
+<div th:replace="/presentation/fragmentos/navOferentes :: nav"></div>
+
+<main>
+    <div class="container mt-2">
+        <h3>Mi CV</h3>
+
+        <!-- Mensaje -->
+        <div class="alert alert-success" th:if="${mensaje != null}" th:text="${mensaje}"></div>
+
+        <!-- Subir CV -->
+        <div class="card p-3 mb-3" style="max-width:500px;">
+            <h6>Subir CV</h6>
+            <form method="post" th:action="@{/oferentes/cv}" enctype="multipart/form-data">
+                <input type="file" name="archivo" accept=".pdf" class="form-control mb-2" required>
+                <button class="btn btn-primary btn-sm w-100">Subir CV</button>
+            </form>
+        </div>
+
+        <!-- Ver CV -->
+        <div class="card p-3" th:if="${curriculum != null}">
+            <h6>Mi CV actual</h6>
+            <object th:data="@{'/'+${curriculum}}" type="application/pdf"
+                    width="100%" height="600px">
+                <p class="text-muted">No se puede mostrar el PDF en este navegador.</p>
+            </object>
+        </div>
+
+        <p class="text-muted mt-2" th:if="${curriculum == null}">No ha subido un CV aún.</p>
+
+    </div>
+</main>
+
+<div th:replace="/presentation/fragmentos/footer :: footer"></div>
+
+</body>
+</html>

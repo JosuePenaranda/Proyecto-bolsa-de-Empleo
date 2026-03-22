@@ -26,7 +26,7 @@ public class Caracteristica {
     @JoinColumn(name = "id_padre")
     private Caracteristica idPadre;
 
-    @OneToMany(mappedBy = "idPadre")
+    @OneToMany(mappedBy = "idPadre", fetch = FetchType.EAGER)
     private Set<Caracteristica> caracteristicas = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "idCaracteristica")

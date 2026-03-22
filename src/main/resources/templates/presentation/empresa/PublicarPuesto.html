@@ -26,72 +26,68 @@
             </div>
 
             <div class="card-body bg-light">
-
+                <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
                 <form method="post" th:action="@{/empresa/PublicarPuesto}">
+
+                    <!-- Cantidad de características -->
+                    <div class="mb-3">
+                        <select name="cantidad" class="form-select" th:onchange="'this.form.action=\'' + @{/empresa/PublicarPuesto} + '\'; this.form.method=\'get\'; this.form.submit();'">
+                            <option value="" disabled selected>¿Cuántas características requiere?</option>
+                            <option value="0" th:selected="${cantidad == 0}">Ninguna</option>
+                            <option th:each="n : ${#numbers.sequence(1, 6)}"
+                                    th:value="${n}"
+                                    th:text="${n}"
+                                    th:selected="${n == cantidad}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Características (solo aparecen si eligió cantidad mayor a 0) -->
+                    <div class="mb-3" th:if="${cantidad != null and cantidad > 0}">
+                        <div class="row mb-2" th:each="i : ${#numbers.sequence(1, cantidad)}">
+                            <div class="col">
+                                <select name="caracteristicas[]" class="form-select">
+                                    <option value="" disabled selected>Característica requerida</option>
+                                    <option th:each="c : ${caracteristicas}"
+                                            th:value="${c.id}"
+                                            th:text="${c.nombre}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Descripción -->
                     <div class="mb-3">
-                        <label class="form-label">Descripción del puesto</label>
-                        <label>
-                            <textarea name="descripcion" class="form-control" rows="3" required></textarea>
-                        </label>
+                        <textarea name="descripcion" class="form-control" rows="3" placeholder="Descripción del puesto" required></textarea>
                     </div>
 
                     <!-- Salario -->
                     <div class="mb-3">
-                        <label class="form-label">Salario ofrecido</label>
-                        <label>
-                            <input type="number" name="salario" class="form-control" required>
-                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" name="salario" class="form-control" placeholder="Salario ofrecido en dólares" required>
+                            <span class="input-group-text">USD</span>
+                        </div>
                     </div>
 
                     <!-- Tipo -->
                     <div class="mb-3">
-                        <label class="form-label">Tipo de publicación</label>
-                        <label>
-                            <select name="tipo" class="form-select">
-                                <option value="PUBLICO">Público</option>
-                                <option value="PRIVADO">Privado</option>
-                            </select>
-                        </label>
+                        <select name="tipo" class="form-select">
+                            <option value="" disabled selected>Tipo de publicación</option>
+                            <option value="PUBLICA">Público</option>
+                            <option value="PRIVADA">Privado</option>
+                        </select>
                     </div>
 
-                    <!-- Características -->
-                    <div class="mb-3">
-                        <label class="form-label">Características requeridas</label>
-
-                        <div id="caracteristicas-container">
-
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <label>
-                                        <select name="caracteristicas[]" class="form-select">
-                                            <option th:each="c : ${caracteristicas}"
-                                                    th:value="${c.id}"
-                                                    th:text="${c.nombre}">
-                                            </option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    <label>
-                                        <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
-                                    </label>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="agregarCaracteristica()">
-                            + Agregar otra
-                        </button>
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100 mt-2">
+                    <button type="submit" class="btn btn-success w-100 mt-2" th:if="${cantidad != null}">
                         Publicar Puesto
                     </button>
-
                 </form>
+
 
                 <!-- MODAL -->
                 <div class="modal fade" id="modalExito" tabindex="-1"
@@ -127,24 +123,6 @@
 
 <!-- FOOTER -->
 <div th:replace="/presentation/fragmentos/footer :: footer"></div>
-
-<script>
-    function agregarCaracteristica() {
-        let container = document.getElementById("caracteristicas-container");
-
-        let html = `
-    <div class="row mb-2">
-      <div class="col">
-        <input type="text" name="caracteristicas[]" class="form-control" placeholder="Característica">
-      </div>
-      <div class="col">
-        <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
-      </div>
-    </div>`;
-
-        container.insertAdjacentHTML('beforeend', html);
-    }
-</script>
 
 </body>
 </html>

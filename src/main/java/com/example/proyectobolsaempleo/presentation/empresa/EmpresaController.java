@@ -1,12 +1,11 @@
 package com.example.proyectobolsaempleo.presentation.empresa;
 
+import com.example.proyectobolsaempleo.Services.TipoCambioService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
-import com.example.proyectobolsaempleo.logic.ModeloDatos;
-import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
+import com.example.proyectobolsaempleo.logic.ServiceDatos;
 import com.example.proyectobolsaempleo.logic.Empresa;
 import com.example.proyectobolsaempleo.logic.Puesto;
-import com.example.proyectobolsaempleo.logic.ServiceEmpresa;
-import com.example.proyectobolsaempleo.logic.ServicePuesto;
+import com.example.proyectobolsaempleo.logic.TipoCambio;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -15,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class EmpresaController {
@@ -24,7 +25,7 @@ public class EmpresaController {
     private HttpSession sesion;
 
     @Autowired
-    private ModeloDatos gestorDatos;
+    private ServiceDatos gestorDatos;
 
     // Dashboard
     @GetMapping("/empresa/dashboard")
@@ -38,15 +39,33 @@ public class EmpresaController {
         }
     }
 
-    // Puestos recien registrados (Parte publica)
     @GetMapping("/empresa/Puestosrecienregistrados")
-    public String Puestosrecienregistrados(Model model) {
-        return "presentation/partePublica/PuestosRecienRegistrados";
+    public String puestosRecientes(Model model) {
+        model.addAttribute("puestos", gestorDatos.getServicePuesto().getTop5Publicos());
+
+        TipoCambio tipoCambio = TipoCambioService.obtenerTipoCambio();
+        model.addAttribute("tipoCambio", tipoCambio);
+
+        return "presentation/partePublica/Puestosrecienregistrados";
     }
 
-    // BuscarPuestos (Parte publica)
     @GetMapping("/empresa/Buscarpuesto")
-    public String buscarPuesto(Model model) {
+    public String mostrarBusqueda(Model model) {
+        model.addAttribute("raices", gestorDatos.getServiceCaracteristica().getRaices());
+        model.addAttribute("caracteristicas", gestorDatos.getServiceCaracteristica().getTodas());
+        model.addAttribute("puestos", null);
+        return "presentation/partePublica/BuscarPuestos";
+    }
+
+    @GetMapping("/empresa/Buscarpuesto/buscar")
+    public String buscarPuestos(@RequestParam(required = false) List<Integer> caracteristicas,
+                                Model model) {
+        TipoCambio tipoCambio = TipoCambioService.obtenerTipoCambio();
+        model.addAttribute("tipoCambio", tipoCambio);
+        model.addAttribute("raices", gestorDatos.getServiceCaracteristica().getRaices());
+        model.addAttribute("caracteristicas", gestorDatos.getServiceCaracteristica().getTodas());
+        model.addAttribute("seleccionadas", caracteristicas);
+        model.addAttribute("puestos", gestorDatos.getServicePuesto().buscarPorCaracteristicas(caracteristicas));
         return "presentation/partePublica/BuscarPuestos";
     }
 
@@ -107,14 +126,14 @@ public class EmpresaController {
     }
 
     @GetMapping("/empresa/PublicarPuesto")
-    public String mostrarFormularioPuesto(Model model) {
+    public String mostrarFormularioPuesto(@RequestParam(required = false) Integer cantidad, Model model) {
         var user = sesion.getAttribute("usuario");
 
         if (user != null) {
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
-
             model.addAttribute("caracteristicas",
                     gestorDatos.getServiceCaracteristica().getHojas());
+            model.addAttribute("cantidad", cantidad);
 
             return "presentation/empresa/PublicarPuesto";
         } else {
@@ -122,14 +141,23 @@ public class EmpresaController {
         }
     }
 
-    @PostMapping("/empresa/publicarPuesto")
+    @PostMapping("/empresa/PublicarPuesto")
     public String publicarPuesto(
             @RequestParam String descripcion,
             @RequestParam Double salario,
             @RequestParam String tipo,
-            @RequestParam("caracteristicas[]") List<Integer> caracteristicas,
-            @RequestParam("niveles[]") List<Integer> niveles,
+            @RequestParam(value = "caracteristicas[]", required = false) List<Integer> caracteristicas,
+            @RequestParam(value = "niveles[]", required = false) List<Integer> niveles,
             Model model) {
+
+        // Validar repetidas
+        Set<Integer> sinRepetidas = new HashSet<>(caracteristicas);
+        if (sinRepetidas.size() != caracteristicas.size()) {
+            model.addAttribute("error", "No puede repetir características");
+            model.addAttribute("cantidad", caracteristicas.size());
+            model.addAttribute("caracteristicas", gestorDatos.getServiceCaracteristica().getHojas());
+            return "presentation/empresa/PublicarPuesto";
+        }
 
         Empresa empresa = (Empresa) sesion.getAttribute("usuario");
 
@@ -138,13 +166,14 @@ public class EmpresaController {
         p.setSalario(salario);
         p.setTipoPublicacion(tipo);
         p.setIdEmpresa(empresa);
+        p.setActivo(true);
 
         gestorDatos.getServicePuesto().guardarPuestoConRequisitos(p, caracteristicas, niveles);
 
         model.addAttribute("mensaje", "Puesto publicado correctamente");
         model.addAttribute("hayMensaje", 1);
 
-        return "presentation/empresa/PublicarPuesto";
+        return "redirect:/empresa/PublicarPuesto";
     }
 
     // VerDetalle

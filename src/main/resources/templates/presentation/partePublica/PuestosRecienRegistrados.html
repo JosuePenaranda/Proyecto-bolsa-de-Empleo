@@ -2,89 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
   <title>Puestos Recién Registrados</title>
-
   <div th:replace="/presentation/fragmentos/head :: baseHead"></div>
-
   <link rel="stylesheet" th:href="@{/css/stylePublico.css}">
-
 </head>
 <body class="bg-light">
 
-    <!-- Nav -->
-    <div th:replace="/presentation/fragmentos/navPartePublica :: nav"></div>
+<div th:replace="/presentation/fragmentos/navPartePublica :: nav"></div>
 
 <main>
-
-  <!-- Contenido de la página -->
   <div class="container mt-3">
 
     <h3>Bolsa de Empleo</h3>
-
     <p>Últimos 5 puestos disponibles</p>
 
     <div class="row g-3">
 
-      <!-- COLUMNA 1 -->
-      <div class="col-4">
+      <div class="col-4" th:each="p : ${puestos}">
         <div class="container mt-4 p-4 rounded shadow-sm" style="background-color:#EBFFEC;">
 
-          <h5>Softlab</h5>
+          <h5 th:text="${p.idEmpresa.nombre}"></h5>
+          <p th:text="${p.descripcion}"></p>
+          <p><b>$ <span th:text="${p.salario}"></span></b></p>
+          <p class="text-muted" style="font-size:13px;">
+            <b>₡ <span th:text="${#numbers.formatDecimal(p.salario * tipoCambio.venta, 0, 'COMMA', 2, 'POINT')}"></span></b>
+          </p>
 
-          <p>Unity game developer</p>
+          <!-- Dropdown detalle -->
+          <div class="dropdown">
+            <button class="btn btn-outline-primary btn-sm dropdown-toggle"
+                    data-bs-toggle="dropdown">
+              Ver detalle
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header"><b>Características requeridas</b></li>
+              <li th:each="req : ${p.puestoRequisitos}">
+                                <span class="dropdown-item">
+                                    <span th:text="${req.idCaracteristica.nombre}"></span>
+                                    — Nivel <span th:text="${req.nivel}"></span>
+                                </span>
+              </li>
+              <li th:if="${#sets.isEmpty(p.puestoRequisitos)}">
+                <span class="dropdown-item text-muted">Sin requisitos</span>
+              </li>
+            </ul>
+          </div>
 
-          <p><b> 1.300.00</b></p>
-
-            <button class="btn btn-outline-primary btn-sm">Ver detalle</button>
         </div>
       </div>
 
-      <!-- COLUMNA 2 -->
-      <div class="col-4">
-        <div class="container mt-4 p-4 rounded shadow-sm" style="background-color:#EBFFEC;">
-
-          <h5>Softlab</h5>
-
-          <p>Embeded software developer</p>
-
-          <p><b> 1.500.00</b></p>
-
-            <button class="btn btn-outline-primary btn-sm">Ver detalle</button>
-        </div>
-      </div>
-
-      <!-- COLUMNA 3 -->
-      <div class="col-4">
-        <div class="container mt-4 p-4 rounded shadow-sm" style="background-color:#EBFFEC;">
-
-          <h5>Websoft</h5>
-
-          <p>Full Stack Developer</p>
-
-          <p><b> 2.000.00</b></p>
-
-            <button class="btn btn-outline-primary btn-sm">Ver detalle</button>
-        </div>
-      </div>
-
-      <!-- COLUMNA 4 -->
-      <div class="col-4">
-        <div class="container mt-4 p-4 rounded shadow-sm" style="background-color:#EBFFEC;">
-
-          <h5>Websoft</h5>
-
-          <p>Frontend Developer</p>
-
-          <p><b> 1.200.00</b></p>
-
-            <button class="btn btn-outline-primary btn">Ver detalle</button>
-        </div>
+      <div th:if="${#lists.isEmpty(puestos)}">
+        <p class="text-muted">No hay puestos disponibles.</p>
       </div>
 
     </div>
   </div>
 </main>
 
-<!-- FOOTER -->
 <div th:replace="/presentation/fragmentos/footer :: footer"></div>
 
 </body>
