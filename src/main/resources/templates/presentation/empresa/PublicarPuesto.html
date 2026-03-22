@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Empresa - Publicar Puesto</title>
+
+    <div th:replace="/presentation/fragmentos/head :: baseHead"></div>
+
+    <link rel="stylesheet" th:href="@{/css/styleLogin.css}">
+
+</head>
+
+<body class="bg-light">
+
+<!-- Nav -->
+<div th:replace="/presentation/fragmentos/navEmpresa :: nav"></div>
+
+<main>
+
+    <!-- FORM -->
+    <div class="container d-flex justify-content-center mt-4 mb-4">
+
+        <div class="card shadow" style="width:700px;">
+
+            <div class="card-header text-center bg-light">
+                <h4>Publicar Puesto</h4>
+            </div>
+
+            <div class="card-body bg-light">
+
+                <form method="post" th:action="@{/empresa/PublicarPuesto}">
+
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label class="form-label">Descripción del puesto</label>
+                        <label>
+                            <textarea name="descripcion" class="form-control" rows="3" required></textarea>
+                        </label>
+                    </div>
+
+                    <!-- Salario -->
+                    <div class="mb-3">
+                        <label class="form-label">Salario ofrecido</label>
+                        <label>
+                            <input type="number" name="salario" class="form-control" required>
+                        </label>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de publicación</label>
+                        <label>
+                            <select name="tipo" class="form-select">
+                                <option value="PUBLICO">Público</option>
+                                <option value="PRIVADO">Privado</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- Características -->
+                    <div class="mb-3">
+                        <label class="form-label">Características requeridas</label>
+
+                        <div id="caracteristicas-container">
+
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <label>
+                                        <select name="caracteristicas[]" class="form-select">
+                                            <option th:each="c : ${caracteristicas}"
+                                                    th:value="${c.id}"
+                                                    th:text="${c.nombre}">
+                                            </option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    <label>
+                                        <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="agregarCaracteristica()">
+                            + Agregar otra
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mt-2">
+                        Publicar Puesto
+                    </button>
+
+                </form>
+
+                <!-- MODAL -->
+                <div class="modal fade" id="modalExito" tabindex="-1"
+                     th:classappend="${hayMensaje == 1} ? 'show d-block' : ''"
+                     th:attr="aria-hidden=${hayMensaje == 1} ? 'false' : 'true'">
+
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title">Puesto publicado</h5>
+                            </div>
+
+                            <div class="modal-body">
+                                <p th:text="${mensaje}"></p>
+                            </div>
+
+                            <div class="modal-footer">
+                                <a th:href="@{/empresa/dashboard}" class="btn btn-primary">Cerrar</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-backdrop fade show" th:if="${hayMensaje == 1}"></div>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- FOOTER -->
+<div th:replace="/presentation/fragmentos/footer :: footer"></div>
+
+<script>
+    function agregarCaracteristica() {
+        let container = document.getElementById("caracteristicas-container");
+
+        let html = `
+    <div class="row mb-2">
+      <div class="col">
+        <input type="text" name="caracteristicas[]" class="form-control" placeholder="Característica">
+      </div>
+      <div class="col">
+        <input type="number" name="niveles[]" class="form-control" placeholder="Nivel (1-10)">
+      </div>
+    </div>`;
+
+        container.insertAdjacentHTML('beforeend', html);
+    }
+</script>
+
+</body>
+</html>

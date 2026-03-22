@@ -2,6 +2,7 @@ package com.example.proyectobolsaempleo.presentation.oferentes;
 
 import com.example.proyectobolsaempleo.Services.NacionalidadService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
+import com.example.proyectobolsaempleo.logic.ModeloDatos;
 import com.example.proyectobolsaempleo.logic.Nacionalidad;
 import com.example.proyectobolsaempleo.logic.Oferente;
 import com.example.proyectobolsaempleo.logic.ServiceOferente;
@@ -21,7 +22,7 @@ public class OferenteController {
     private HttpSession sesion;
 
     @Autowired
-    private ServiceOferente serviceOferente;
+    private ModeloDatos gestorDatos;
 
     // Dashboard
     @GetMapping("/oferentes/dashboard")
@@ -91,11 +92,10 @@ public class OferenteController {
         oferente.setAutorizado(false);
         oferente.setCurriculum(null);
 
-        serviceOferente.oferenteSave(oferente);
+        gestorDatos.getServiceOferente().oferenteSave(oferente);
 
         model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
         model.addAttribute("hayMensaje", 1);
         return "presentation/partePublica/Registrooferente";
     }
-
 }

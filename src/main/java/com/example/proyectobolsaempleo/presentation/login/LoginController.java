@@ -1,22 +1,24 @@
 package com.example.proyectobolsaempleo.presentation.login;
 
+import com.example.proyectobolsaempleo.logic.ModeloDatos;
 import com.example.proyectobolsaempleo.logic.Administrador;
 import com.example.proyectobolsaempleo.logic.Empresa;
 import com.example.proyectobolsaempleo.logic.Oferente;
-import com.example.proyectobolsaempleo.logic.ServiceLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@org.springframework.stereotype.Controller("login")
+@Controller
 public class LoginController {
-    @Autowired
-    private ServiceLogin serviceLogin;
 
+    @Autowired
+    private ModeloDatos gestorDatos;
+    
     // Login
     @GetMapping("/Login")
     public String show(Model model) {
@@ -32,7 +34,7 @@ public class LoginController {
             return "presentation/login/Login";
         }
 
-        var usuario = serviceLogin.login(correo, clave);
+        var usuario = gestorDatos.getServiceLogin().login(correo, clave);
 
         if(usuario != null) {
 
@@ -76,5 +78,4 @@ public class LoginController {
         session.removeAttribute("correoUsuario");
         return "redirect:/empresa/Puestosrecienregistrados";
     }
-
 }

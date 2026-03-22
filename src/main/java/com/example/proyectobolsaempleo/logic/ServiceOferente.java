@@ -4,9 +4,9 @@ import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.data.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @org.springframework.stereotype.Service("serviceOferente")
@@ -28,5 +28,9 @@ public class ServiceOferente {
             oferente.setAutorizado(true);
             oferenteRepository.save(oferente);
         }
+    }
+
+    public List<Oferente> listar() {
+        return (List<Oferente>) oferenteRepository.findAll();
     }
 }

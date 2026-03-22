@@ -45,7 +45,7 @@ public class Puesto {
         this.fechaPublicacion = LocalDate.now();
     }
 
-    @OneToMany(mappedBy = "idPuesto")
+    @OneToMany(mappedBy = "idPuesto", cascade = CascadeType.ALL)
     private Set<PuestoRequisito> puestoRequisitos = new LinkedHashSet<>();
 
 }
