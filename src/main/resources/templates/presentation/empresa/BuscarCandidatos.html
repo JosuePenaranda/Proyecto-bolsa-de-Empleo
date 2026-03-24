@@ -36,7 +36,10 @@
             <tr th:each="oferente : ${oferentes}">
                 <td th:text="${oferente.nombre + ' ' + oferente.primerApellido}"></td>
                 <td th:text="${cumplidos != null ? cumplidos[oferente.identificacion] + '/' + totalRequisitos : '-'}"></td>
-                <td>100,00%</td>
+                <td>
+                <span th:text="${porcentajes[oferente.identificacion] != null
+                    ? #numbers.formatDecimal(porcentajes[oferente.identificacion],1,2) + '%' : '-'}"></span>
+                </td>
                 <td>
                     <a th:href="@{/empresa/VerDetalle(idOferente=${oferente.identificacion}, idPuesto=${puesto != null ? puesto.id : null})}" class="btn btn-outline-primary btn-sm">
                         Ver Detalle
