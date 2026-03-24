@@ -1,6 +1,7 @@
 package com.example.proyectobolsaempleo.presentation.administrador;
 
 import com.example.proyectobolsaempleo.logic.*;
+import com.example.proyectobolsaempleo.modelo.ModeloDatos;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -18,8 +19,7 @@ public class AdminController {
     @Autowired
     private HttpSession sesion;
 
-    @Autowired
-    private ServiceDatos gestorDatos;
+    private ModeloDatos gestorDatos = ModeloDatos.getInstancia();
 
     // Dashboard
     @GetMapping("/administrador/dashboard")
@@ -43,15 +43,15 @@ public class AdminController {
 
             if (actualId == null) {
                 model.addAttribute("caracteristicas",
-                        gestorDatos.getServiceCaracteristica().getRaices());
+                        gestorDatos.getServiceDatos().getServiceCaracteristica().getRaices());
                 model.addAttribute("ruta", new ArrayList<>());
                 model.addAttribute("actual", null);
             } else {
                 Caracteristica actual =
-                        gestorDatos.getServiceCaracteristica().findById(actualId);
+                        gestorDatos.getServiceDatos().getServiceCaracteristica().findById(actualId);
 
                 model.addAttribute("caracteristicas",
-                        gestorDatos.getServiceCaracteristica().getHijos(actualId));
+                        gestorDatos.getServiceDatos().getServiceCaracteristica().getHijos(actualId));
                 model.addAttribute("actual", actual);
 
                 List<Caracteristica> ruta = new ArrayList<>();
@@ -66,10 +66,10 @@ public class AdminController {
 
             if (actualId == null) {
                 model.addAttribute("todas",
-                        gestorDatos.getServiceCaracteristica().getRaices());
+                        gestorDatos.getServiceDatos().getServiceCaracteristica().getRaices());
             } else {
                 model.addAttribute("todas",
-                        gestorDatos.getServiceCaracteristica().getHijos(actualId));
+                        gestorDatos.getServiceDatos().getServiceCaracteristica().getHijos(actualId));
             }
 
             return "presentation/administrador/AdministradorCaracteristicas";
@@ -83,7 +83,7 @@ public class AdminController {
                                       @RequestParam(required = false) Integer idPadre,
                                       @RequestParam(required = false) Integer actualId) {
 
-        gestorDatos.getServiceCaracteristica()
+        gestorDatos.getServiceDatos().getServiceCaracteristica()
                 .crearCaracteristica(nombre, idPadre);
 
         if (actualId != null) {
@@ -100,7 +100,7 @@ public class AdminController {
 
                 model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
                 model.addAttribute("empresas",
-                        gestorDatos.getServiceEmpresa().empresasPendientes());
+                        gestorDatos.getServiceDatos().getServiceEmpresa().empresasPendientes());
 
                 return "presentation/administrador/AdministradorEmpresasPendientes";
         } else {
@@ -112,7 +112,7 @@ public class AdminController {
     @PostMapping("/administrador/aprobarEmpresa")
     public String aprobarEmpresa(@RequestParam String id) {
 
-        gestorDatos.getServiceEmpresa().aprobarEmpresa(id);
+        gestorDatos.getServiceDatos().getServiceEmpresa().aprobarEmpresa(id);
 
         return "redirect:/administrador/AdminEmpresasPendientes";
     }
@@ -125,7 +125,7 @@ public class AdminController {
 
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             model.addAttribute("oferentes",
-                    gestorDatos.getServiceOferente().oferentesPendientes());
+                    gestorDatos.getServiceDatos().getServiceOferente().oferentesPendientes());
 
             return "presentation/administrador/AdministradorOferentesPendientes";
         } else {
@@ -137,7 +137,7 @@ public class AdminController {
     @PostMapping("/administrador/aprobarOferente")
     public String aprobarOferente(@RequestParam String id) {
 
-        gestorDatos.getServiceOferente().aprobarOferente(id);
+        gestorDatos.getServiceDatos().getServiceOferente().aprobarOferente(id);
 
         return "redirect:/administrador/AdminOferentesPendientes";
     }
@@ -171,7 +171,7 @@ public class AdminController {
             return ResponseEntity.status(401).build();
         }
         try {
-            byte[] pdf = gestorDatos.getServiceReporte()
+            byte[] pdf = gestorDatos.getServiceDatos().getServiceReporte()
                     .generarReportePuestosPorMes(mes, anio);
 
             String nombreArchivo = "reporte-puestos-" + anio + "-" + String.format("%02d", mes) + ".pdf";

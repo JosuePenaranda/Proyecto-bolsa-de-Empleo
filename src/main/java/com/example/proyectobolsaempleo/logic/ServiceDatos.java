@@ -1,9 +1,9 @@
 package com.example.proyectobolsaempleo.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class ServiceDatos {
 
     @Autowired
@@ -19,25 +19,53 @@ public class ServiceDatos {
     private ServiceOferente serviceOferente;
 
     @Autowired
-    private ServiceLogin serviceLogin;
+    private ServiceReporte serviceReporte;
 
     @Autowired
     private ServicePuesto servicePuesto;
 
     @Autowired
-    private ServiceReporte serviceReporte;
-
-    @Autowired
     private ServiceHabilidad serviceHabilidad;
 
-    // Getters
-    public ServiceAdministrador getServiceAdministrador() { return serviceAdministrador; }
-    public ServiceCaracteristica getServiceCaracteristica() { return serviceCaracteristica; }
-    public ServiceEmpresa getServiceEmpresa() { return serviceEmpresa; }
-    public ServiceOferente getServiceOferente() { return serviceOferente; }
-    public ServiceLogin getServiceLogin() { return serviceLogin; }
-    public ServicePuesto getServicePuesto() { return servicePuesto; }
-    public ServiceReporte getServiceReporte() { return serviceReporte; }
-    public ServiceHabilidad getServiceHabilidad() { return serviceHabilidad; }
+    @Autowired
+    private ServiceLogin serviceLogin;
 
+    @Autowired
+    private ServiceBusqueda serviceBusqueda;
+
+    public ServiceAdministrador getServiceAdministrador() {
+        return serviceAdministrador;
+    }
+
+    public ServiceCaracteristica getServiceCaracteristica() {
+        return serviceCaracteristica;
+    }
+
+    public ServiceEmpresa getServiceEmpresa() {
+        return serviceEmpresa;
+    }
+
+    public ServiceOferente getServiceOferente() {
+        return serviceOferente;
+    }
+
+    public ServiceReporte getServiceReporte() {
+        return serviceReporte;
+    }
+
+    public ServicePuesto getServicePuesto() {
+        return servicePuesto;
+    }
+
+    public ServiceHabilidad getServiceHabilidad() {
+        return serviceHabilidad;
+    }
+
+    public ServiceLogin getServiceLogin() {
+        return serviceLogin;
+    }
+
+    public ServiceBusqueda getServiceBusqueda() {
+        return serviceBusqueda;
+    }
 }

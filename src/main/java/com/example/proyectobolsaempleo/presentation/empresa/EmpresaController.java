@@ -5,6 +5,7 @@ import java.util.*;
 import com.example.proyectobolsaempleo.Services.TipoCambioService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.logic.*;
+import com.example.proyectobolsaempleo.modelo.ModeloDatos;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -19,11 +20,7 @@ public class EmpresaController {
     @Autowired
     private HttpSession sesion;
 
-    @Autowired
-    private ServiceBusqueda serviceBusqueda;
-
-    @Autowired
-    private ServiceDatos gestorDatos;
+    private ModeloDatos gestorDatos = ModeloDatos.getInstancia();
 
     // Dashboard
     @GetMapping("/empresa/dashboard")
@@ -39,7 +36,7 @@ public class EmpresaController {
 
     @GetMapping("/empresa/Puestosrecienregistrados")
     public String puestosRecientes(Model model) {
-        model.addAttribute("puestos", gestorDatos.getServicePuesto().getTop5Publicos());
+        model.addAttribute("puestos", gestorDatos.getServiceDatos().getServicePuesto().getTop5Publicos());
 
         TipoCambio tipoCambio = TipoCambioService.obtenerTipoCambio();
         model.addAttribute("tipoCambio", tipoCambio);
@@ -49,8 +46,8 @@ public class EmpresaController {
 
     @GetMapping("/empresa/Buscarpuesto")
     public String mostrarBusqueda(Model model) {
-        model.addAttribute("raices", gestorDatos.getServiceCaracteristica().getRaices());
-        model.addAttribute("caracteristicas", gestorDatos.getServiceCaracteristica().getTodas());
+        model.addAttribute("raices", gestorDatos.getServiceDatos().getServiceCaracteristica().getRaices());
+        model.addAttribute("caracteristicas", gestorDatos.getServiceDatos().getServiceCaracteristica().getTodas());
         model.addAttribute("puestos", null);
         return "presentation/partePublica/BuscarPuestos";
     }
@@ -60,10 +57,10 @@ public class EmpresaController {
                                 Model model) {
         TipoCambio tipoCambio = TipoCambioService.obtenerTipoCambio();
         model.addAttribute("tipoCambio", tipoCambio);
-        model.addAttribute("raices", gestorDatos.getServiceCaracteristica().getRaices());
-        model.addAttribute("caracteristicas", gestorDatos.getServiceCaracteristica().getTodas());
+        model.addAttribute("raices", gestorDatos.getServiceDatos().getServiceCaracteristica().getRaices());
+        model.addAttribute("caracteristicas", gestorDatos.getServiceDatos().getServiceCaracteristica().getTodas());
         model.addAttribute("seleccionadas", caracteristicas);
-        model.addAttribute("puestos", gestorDatos.getServicePuesto().buscarPorCaracteristicas(caracteristicas));
+        model.addAttribute("puestos", gestorDatos.getServiceDatos().getServicePuesto().buscarPorCaracteristicas(caracteristicas));
         return "presentation/partePublica/BuscarPuestos";
     }
 
@@ -92,7 +89,7 @@ public class EmpresaController {
         empresa.setDescripcion(descripcion);
         empresa.setAutorizado(false);
 
-        gestorDatos.getServiceEmpresa().empresaSave(empresa);
+        gestorDatos.getServiceDatos().getServiceEmpresa().empresaSave(empresa);
 
         model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
         model.addAttribute("hayMensaje", 1);
@@ -104,7 +101,7 @@ public class EmpresaController {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
 
-            List<Oferente> oferentes = gestorDatos.getServiceOferente().listar()
+            List<Oferente> oferentes = gestorDatos.getServiceDatos().getServiceOferente().listar()
                     .stream()
                     .filter(o -> o.getAutorizado() != null && o.getAutorizado())
                     .toList();
@@ -112,14 +109,14 @@ public class EmpresaController {
             model.addAttribute("oferentes", oferentes);
 
             if (idPuesto != null) {
-                Puesto puesto = gestorDatos.getServicePuesto().findById(idPuesto);
-                List<PuestoRequisito> requisitos = gestorDatos.getServicePuesto().getRequisitosDePuesto(idPuesto);
+                Puesto puesto = gestorDatos.getServiceDatos().getServicePuesto().findById(idPuesto);
+                List<PuestoRequisito> requisitos = gestorDatos.getServiceDatos().getServicePuesto().getRequisitosDePuesto(idPuesto);
 
                 Map<String, Integer> cumplidos = new HashMap<>();
                 Map<String, Double> porcentajes = new HashMap<>();
 
                 List<Caracteristica> todas =
-                        gestorDatos.getServiceCaracteristica().getHojas();
+                        gestorDatos.getServiceDatos().getServiceCaracteristica().getHojas();
 
                 // Vector del puesto
                 List<Integer> vectorPuesto = construirVectorPuesto(puesto, todas);
@@ -131,7 +128,7 @@ public class EmpresaController {
                     List<Integer> vectorOferente = construirVectorOferente(o, todas);
 
                     // Similitud coseno
-                    double sim = serviceBusqueda.calcularSimilitudCoseno(vectorOferente, vectorPuesto);
+                    double sim = gestorDatos.getServiceDatos().getServiceBusqueda().calcularSimilitudCoseno(vectorOferente, vectorPuesto);
 
                     porcentajes.put(o.getIdentificacion(), sim * 100);
                 }
@@ -163,7 +160,7 @@ public class EmpresaController {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
             Empresa empresa = (Empresa) sesion.getAttribute("usuario");
-            model.addAttribute("puestos", gestorDatos.getServicePuesto().getPuestosPorEmpresa(empresa));
+            model.addAttribute("puestos", gestorDatos.getServiceDatos().getServicePuesto().getPuestosPorEmpresa(empresa));
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             return "presentation/empresa/MisPuestos";
         } else {
@@ -173,13 +170,13 @@ public class EmpresaController {
 
     @PostMapping("/empresa/DesactivarPuesto")
     public String desactivarPuesto(@RequestParam Integer id) {
-        gestorDatos.getServicePuesto().desactivarPuesto(id);
+        gestorDatos.getServiceDatos().getServicePuesto().desactivarPuesto(id);
         return "redirect:/empresa/MisPuestos";
     }
 
     @PostMapping("/empresa/ActivarPuesto")
     public String activarPuesto(@RequestParam Integer id) {
-        gestorDatos.getServicePuesto().activarPuesto(id);
+        gestorDatos.getServiceDatos().getServicePuesto().activarPuesto(id);
         return "redirect:/empresa/MisPuestos";
     }
 
@@ -190,7 +187,7 @@ public class EmpresaController {
         if (user != null) {
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             model.addAttribute("caracteristicas",
-                    gestorDatos.getServiceCaracteristica().getHojas());
+                    gestorDatos.getServiceDatos().getServiceCaracteristica().getHojas());
             model.addAttribute("cantidad", cantidad);
 
             return "presentation/empresa/PublicarPuesto";
@@ -213,7 +210,7 @@ public class EmpresaController {
         if (sinRepetidas.size() != caracteristicas.size()) {
             model.addAttribute("error", "No puede repetir características");
             model.addAttribute("cantidad", caracteristicas.size());
-            model.addAttribute("caracteristicas", gestorDatos.getServiceCaracteristica().getHojas());
+            model.addAttribute("caracteristicas", gestorDatos.getServiceDatos().getServiceCaracteristica().getHojas());
             return "presentation/empresa/PublicarPuesto";
         }
 
@@ -226,7 +223,7 @@ public class EmpresaController {
         p.setIdEmpresa(empresa);
         p.setActivo(true);
 
-        gestorDatos.getServicePuesto().guardarPuestoConRequisitos(p, caracteristicas, niveles);
+        gestorDatos.getServiceDatos().getServicePuesto().guardarPuestoConRequisitos(p, caracteristicas, niveles);
 
         model.addAttribute("mensaje", "Puesto publicado correctamente");
         model.addAttribute("hayMensaje", 1);
@@ -241,8 +238,8 @@ public class EmpresaController {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
             if (idOferente != null) {
-                Oferente oferente = gestorDatos.getServiceOferente().buscarPorId(idOferente);
-                List<Habilidad> habilidades = gestorDatos.getServiceHabilidad().listarPorOferente(oferente);
+                Oferente oferente = gestorDatos.getServiceDatos().getServiceOferente().buscarPorId(idOferente);
+                List<Habilidad> habilidades = gestorDatos.getServiceDatos().getServiceHabilidad().listarPorOferente(oferente);
                 model.addAttribute("oferente", oferente);
                 model.addAttribute("habilidades", habilidades);
             }
