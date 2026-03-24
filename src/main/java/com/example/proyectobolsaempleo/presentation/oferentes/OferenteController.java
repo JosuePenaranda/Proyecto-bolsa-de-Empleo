@@ -3,6 +3,7 @@ package com.example.proyectobolsaempleo.presentation.oferentes;
 import com.example.proyectobolsaempleo.Services.NacionalidadService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.logic.*;
+import com.example.proyectobolsaempleo.modelo.ModeloDatos;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -20,8 +21,7 @@ public class OferenteController {
     @Autowired
     private HttpSession sesion;
 
-    @Autowired
-    private ServiceDatos gestorDatos;
+    private ModeloDatos gestorDatos = ModeloDatos.getInstancia();
 
     // Dashboard
     @GetMapping("/oferentes/dashboard")
@@ -43,12 +43,12 @@ public class OferenteController {
             Oferente oferente = (Oferente) sesion.getAttribute("usuario");
 
             Caracteristica actual = actualId != null
-                    ? gestorDatos.getServiceCaracteristica().findById(actualId)
+                    ? gestorDatos.getServiceDatos().getServiceCaracteristica().findById(actualId)
                     : null;
 
-            List<Caracteristica> hijos = gestorDatos.getServiceCaracteristica().getHijos(actualId);
-            List<Caracteristica> ruta = gestorDatos.getServiceCaracteristica().obtenerRuta(actualId);
-            List<Habilidad> habilidades = gestorDatos.getServiceHabilidad().listarPorOferente(oferente);
+            List<Caracteristica> hijos = gestorDatos.getServiceDatos().getServiceCaracteristica().getHijos(actualId);
+            List<Caracteristica> ruta = gestorDatos.getServiceDatos().getServiceCaracteristica().obtenerRuta(actualId);
+            List<Habilidad> habilidades = gestorDatos.getServiceDatos().getServiceHabilidad().listarPorOferente(oferente);
 
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             model.addAttribute("actual", actual);
@@ -68,10 +68,10 @@ public class OferenteController {
     public String agregarHabilidad(@RequestParam Integer idCaracteristica,
                                    @RequestParam Integer nivel) {
         Oferente oferente = (Oferente) sesion.getAttribute("usuario");
-        Caracteristica caracteristica = gestorDatos.getServiceCaracteristica().findById(idCaracteristica);
+        Caracteristica caracteristica = gestorDatos.getServiceDatos().getServiceCaracteristica().findById(idCaracteristica);
 
         // Validar que no exista ya
-        if (gestorDatos.getServiceHabilidad().yaExiste(oferente, caracteristica)) {
+        if (gestorDatos.getServiceDatos().getServiceHabilidad().yaExiste(oferente, caracteristica)) {
             return "redirect:/oferentes/habilidades?actualId=" + idCaracteristica;
         }
 
@@ -80,7 +80,7 @@ public class OferenteController {
         h.setIdCaracteristica(caracteristica);
         h.setNivel(nivel);
 
-        gestorDatos.getServiceHabilidad().guardar(h);
+        gestorDatos.getServiceDatos().getServiceHabilidad().guardar(h);
 
         return "redirect:/oferentes/habilidades";
     }
@@ -89,7 +89,7 @@ public class OferenteController {
     @PostMapping("/oferentes/actualizarHabilidad")
     public String actualizarHabilidad(@RequestParam Integer idHabilidad,
                                       @RequestParam Integer nivel) {
-        gestorDatos.getServiceHabilidad().actualizar(idHabilidad, nivel);
+        gestorDatos.getServiceDatos().getServiceHabilidad().actualizar(idHabilidad, nivel);
         return "redirect:/oferentes/habilidades";
     }
 
@@ -112,10 +112,10 @@ public class OferenteController {
         Oferente oferente = (Oferente) sesion.getAttribute("usuario");
 
         try {
-            gestorDatos.getServiceOferente().guardarCurriculum(oferente.getIdentificacion(), archivo);
+            gestorDatos.getServiceDatos().getServiceOferente().guardarCurriculum(oferente.getIdentificacion(), archivo);
 
             // Actualizar el oferente en sesión
-            Oferente actualizado = gestorDatos.getServiceOferente().buscarPorId(oferente.getIdentificacion());
+            Oferente actualizado = gestorDatos.getServiceDatos().getServiceOferente().buscarPorId(oferente.getIdentificacion());
             sesion.setAttribute("usuario", actualizado);
 
             model.addAttribute("mensaje", "CV subido correctamente");
@@ -124,7 +124,7 @@ public class OferenteController {
         }
 
         model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
-        model.addAttribute("curriculum", gestorDatos.getServiceOferente().buscarPorId(oferente.getIdentificacion()).getCurriculum());
+        model.addAttribute("curriculum", gestorDatos.getServiceDatos().getServiceOferente().buscarPorId(oferente.getIdentificacion()).getCurriculum());
         return "presentation/oferentes/MiCV";
     }
 
@@ -160,7 +160,7 @@ public class OferenteController {
         oferente.setAutorizado(false);
         oferente.setCurriculum(null);
 
-        gestorDatos.getServiceOferente().oferenteSave(oferente);
+        gestorDatos.getServiceDatos().getServiceOferente().oferenteSave(oferente);
 
         model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
         model.addAttribute("hayMensaje", 1);
