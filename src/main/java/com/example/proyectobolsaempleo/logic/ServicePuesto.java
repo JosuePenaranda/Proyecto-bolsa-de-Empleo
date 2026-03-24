@@ -89,4 +89,26 @@ public class ServicePuesto {
 
         return puestoRepository.findByCaracteristicas(idsExpandidos);
     }
+
+    public List<Puesto> getPuestosPorEmpresa(Empresa empresa) {
+        return puestoRepository.findByIdEmpresa(empresa);
+    }
+
+    public void desactivarPuesto(Integer id) {
+        Puesto puesto = puestoRepository.findById(id).orElse(null);
+        if (puesto != null) {
+            puesto.setActivo(false);
+            puestoRepository.save(puesto);
+        }
+    }
+
+    public void activarPuesto(Integer id) {
+        Puesto puesto = puestoRepository.findById(id).orElse(null);
+        if (puesto != null) {
+            puesto.setActivo(true);
+            puestoRepository.save(puesto);
+        }
+    }
+
+
 }

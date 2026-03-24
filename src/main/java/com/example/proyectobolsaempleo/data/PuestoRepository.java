@@ -1,5 +1,6 @@
 package com.example.proyectobolsaempleo.data;
 
+import com.example.proyectobolsaempleo.logic.Empresa;
 import com.example.proyectobolsaempleo.logic.Puesto;
 import com.example.proyectobolsaempleo.logic.PuestoRequisito;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +33,6 @@ public interface PuestoRepository extends CrudRepository<Puesto, Integer> {
             "AND pr.idCaracteristica.id IN :ids " +
             "ORDER BY p.fechaPublicacion DESC")
     List<Puesto> findByCaracteristicas(@Param("ids") List<Integer> ids);
+
+    List<Puesto> findByIdEmpresa(Empresa empresa);
 }

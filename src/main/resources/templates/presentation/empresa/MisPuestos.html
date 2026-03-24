@@ -20,17 +20,15 @@
 
         <h3>Mis puestos</h3>
 
-        <a th:href="@{/empresa/PublicarPuesto}" class="btn btn-primary btn-sm ">
+        <a th:href="@{/empresa/PublicarPuesto}" class="btn btn-primary btn-sm">
             Publicar puesto
         </a>
-
 
         <br/>
 
         <table class="table table-striped">
 
             <thead class="table-white bg-dark text-white">
-
             <tr>
                 <th>ID</th>
                 <th>Descripción</th>
@@ -38,57 +36,39 @@
                 <th>Activo</th>
                 <th>Acciones</th>
             </tr>
-
             </thead>
 
             <tbody>
-
-            <tr>
-                <td>2</td>
-                <td>Full Stack Developer</td>
-                <td>2000.0</td>
+            <tr th:each="puesto : ${puestos}">
+                <td th:text="${puesto.id}"></td>
+                <td th:text="${puesto.descripcion}"></td>
+                <td th:text="${puesto.salario}"></td>
                 <td>
-                    <button class="btn btn-success">
-                        Sí
-                    </button>
-
-                <td>
-
-                    <button class="btn btn-outline-danger btn-sm">
-                        Desactivar
-                    </button>
-
-                    <button class="btn btn-primary btn-sm">
-                        Buscar Candidatos
-                    </button>
-
+                    <button th:if="${puesto.activo}" class="btn btn-success btn-sm">Sí</button>
+                    <button th:unless="${puesto.activo}" class="btn btn-danger btn-sm">No</button>
                 </td>
-
-            </tr>
-
-            <tr>
-                <td>1</td>
-                <td>Frontend Developer</td>
-                <td>1200.0</td>
                 <td>
-                    <button class="btn btn-success">
-                        Sí
-                    </button>
+                    <!-- Desactivar (solo si está activo) -->
+                    <form th:if="${puesto.activo}" th:action="@{/empresa/DesactivarPuesto}" method="post" style="display:inline">
+                        <input type="hidden" name="id" th:value="${puesto.id}"/>
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            Desactivar
+                        </button>
+                    </form>
 
-                <td>
+                    <!-- Activar (solo si está inactivo) -->
+                    <form th:unless="${puesto.activo}" th:action="@{/empresa/ActivarPuesto}" method="post" style="display:inline">
+                        <input type="hidden" name="id" th:value="${puesto.id}"/>
+                        <button type="submit" class="btn btn-outline-success btn-sm">
+                            Activar
+                        </button>
+                    </form>
 
-                    <button class="btn btn-outline-danger btn-sm">
-                        Desactivar
-                    </button>
-
-                    <button class="btn btn-outline-primary btn-sm">
+                    <a th:href="@{/empresa/BuscarCandidatos(idPuesto=${puesto.id})}" class="btn btn-primary btn-sm">
                         Buscar Candidatos
-                    </button>
-
+                    </a>
                 </td>
-
             </tr>
-
             </tbody>
 
         </table>

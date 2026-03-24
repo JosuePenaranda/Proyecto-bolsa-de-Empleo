@@ -20,43 +20,35 @@
 
         <br/>
         <h3>Candidatos para el puesto</h3>
-        <p><b>Puesto:</b> Full Stack Developer</p>
+        <p><b>Puesto:</b> <span th:text="${puesto != null} ? ${puesto.descripcion} : ''"></span></p>
 
         <table class="table table-striped">
-
             <thead class="table-white bg-dark text-white">
-
             <tr>
                 <th>Oferente</th>
                 <th>Requerimientos cumplidos</th>
                 <th>% Coincidencia</th>
+                <th>Acciones</th>
             </tr>
-
             </thead>
 
             <tbody>
-
-            <tr>
-                <td>Jose Sánchez</td>
-                <td>1/1</td>
+            <tr th:each="oferente : ${oferentes}">
+                <td th:text="${oferente.nombre + ' ' + oferente.primerApellido}"></td>
+                <td th:text="${cumplidos != null ? cumplidos[oferente.identificacion] + '/' + totalRequisitos : '-'}"></td>
                 <td>100,00%</td>
                 <td>
-
-                    <button class="btn btn-outline-primary btn-sm">
+                    <a th:href="@{/empresa/VerDetalle(idOferente=${oferente.identificacion}, idPuesto=${puesto != null ? puesto.id : null})}" class="btn btn-outline-primary btn-sm">
                         Ver Detalle
-                    </button>
-
+                    </a>
                 </td>
-
             </tr>
-
             </tbody>
-
         </table>
 
-        <button class="btn btn-outline-primary btn-sm">
+        <a th:href="@{/empresa/MisPuestos}" class="btn btn-outline-primary btn-sm">
             Volver
-        </button>
+        </a>
 
     </div>
 </main>

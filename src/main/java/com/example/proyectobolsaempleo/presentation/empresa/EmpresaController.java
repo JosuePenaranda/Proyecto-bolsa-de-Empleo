@@ -1,11 +1,10 @@
 package com.example.proyectobolsaempleo.presentation.empresa;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.example.proyectobolsaempleo.Services.TipoCambioService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
-import com.example.proyectobolsaempleo.logic.ServiceDatos;
-import com.example.proyectobolsaempleo.logic.Empresa;
-import com.example.proyectobolsaempleo.logic.Puesto;
-import com.example.proyectobolsaempleo.logic.TipoCambio;
+import com.example.proyectobolsaempleo.logic.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -101,11 +100,32 @@ public class EmpresaController {
         return "presentation/partePublica/RegistroEmpresa";
     }
 
-    // BuscarCandidatos
     @GetMapping("/empresa/BuscarCandidatos")
-    public String BuscarCandidatos(Model model) {
+    public String BuscarCandidatos(@RequestParam(required = false) Integer idPuesto, Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
+
+            List<Oferente> oferentes = gestorDatos.getServiceOferente().listar()
+                    .stream()
+                    .filter(o -> o.getAutorizado() != null && o.getAutorizado())
+                    .toList();
+
+            model.addAttribute("oferentes", oferentes);
+
+            if (idPuesto != null) {
+                Puesto puesto = gestorDatos.getServicePuesto().findById(idPuesto);
+                List<PuestoRequisito> requisitos = gestorDatos.getServicePuesto().getRequisitosDePuesto(idPuesto);
+
+                Map<String, Integer> cumplidos = new HashMap<>();
+                for (Oferente o : oferentes) {
+                    cumplidos.put(o.getIdentificacion(), contarCumplidos(o, requisitos));
+                }
+
+                model.addAttribute("puesto", puesto);
+                model.addAttribute("totalRequisitos", requisitos.size());
+                model.addAttribute("cumplidos", cumplidos);
+            }
+
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             return "presentation/empresa/BuscarCandidatos";
         } else {
@@ -113,16 +133,38 @@ public class EmpresaController {
         }
     }
 
-    // MisPuestos
+    private int contarCumplidos(Oferente oferente, List<PuestoRequisito> requisitos) {
+        List<Integer> idsOferente = oferente.getHabilidads().stream()
+                .map(h -> h.getIdCaracteristica().getId())
+                .toList();
+        return (int) requisitos.stream()
+                .filter(r -> idsOferente.contains(r.getIdCaracteristica().getId()))
+                .count();
+    }
+
     @GetMapping("/empresa/MisPuestos")
     public String MisPuestos(Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
+            Empresa empresa = (Empresa) sesion.getAttribute("usuario");
+            model.addAttribute("puestos", gestorDatos.getServicePuesto().getPuestosPorEmpresa(empresa));
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             return "presentation/empresa/MisPuestos";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
         }
+    }
+
+    @PostMapping("/empresa/DesactivarPuesto")
+    public String desactivarPuesto(@RequestParam Integer id) {
+        gestorDatos.getServicePuesto().desactivarPuesto(id);
+        return "redirect:/empresa/MisPuestos";
+    }
+
+    @PostMapping("/empresa/ActivarPuesto")
+    public String activarPuesto(@RequestParam Integer id) {
+        gestorDatos.getServicePuesto().activarPuesto(id);
+        return "redirect:/empresa/MisPuestos";
     }
 
     @GetMapping("/empresa/PublicarPuesto")
@@ -176,15 +218,24 @@ public class EmpresaController {
         return "redirect:/empresa/PublicarPuesto";
     }
 
-    // VerDetalle
     @GetMapping("/empresa/VerDetalle")
-    public String VerDetalle(Model model) {
+    public String VerDetalle(@RequestParam(required = false) String idOferente,
+                             @RequestParam(required = false) Integer idPuesto,
+                             Model model) {
         var user = sesion.getAttribute("usuario");
         if (user != null) {
+            if (idOferente != null) {
+                Oferente oferente = gestorDatos.getServiceOferente().buscarPorId(idOferente);
+                List<Habilidad> habilidades = gestorDatos.getServiceHabilidad().listarPorOferente(oferente);
+                model.addAttribute("oferente", oferente);
+                model.addAttribute("habilidades", habilidades);
+            }
+            model.addAttribute("idPuesto", idPuesto);
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
             return "presentation/empresa/VerDetalles";
         } else {
             return "redirect:/empresa/Puestosrecienregistrados";
         }
     }
+
 }
