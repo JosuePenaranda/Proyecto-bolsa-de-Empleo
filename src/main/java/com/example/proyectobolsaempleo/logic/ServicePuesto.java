@@ -3,6 +3,7 @@ package com.example.proyectobolsaempleo.logic;
 import com.example.proyectobolsaempleo.data.CaracteristicaRepository;
 import com.example.proyectobolsaempleo.data.PuestoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,15 @@ public class ServicePuesto {
 
     @Autowired
     private CaracteristicaRepository caracteristicaRepository;
+
+    @Autowired
+    private ServiceBusqueda serviceBusqueda;
+
+    @Autowired
+    private ServiceOferente serviceOferente;
+
+    @Autowired
+    private ServiceCaracteristica serviceCaracteristica;
 
     public List<Puesto> getPuestosPorMes(int mes, int anio) {
         return puestoRepository.findByMesYAnio(mes, anio);
@@ -108,6 +118,68 @@ public class ServicePuesto {
             puesto.setActivo(true);
             puestoRepository.save(puesto);
         }
+    }
+
+    private List<Integer> construirVectorOferente(Oferente o, List<Caracteristica> todas) {
+        List<Integer> vector = new ArrayList<>();
+
+        for (Caracteristica c : todas) {
+            int nivel = 0;
+
+            for (Habilidad h : o.getHabilidads()) {
+                if (h.getIdCaracteristica().getId().equals(c.getId())) {
+                    nivel = h.getNivel() != null ? h.getNivel() : 0;
+                    break;
+                }
+            }
+
+            vector.add(nivel);
+        }
+
+        return vector;
+    }
+
+    private List<Integer> construirVectorPuesto(Puesto p, List<Caracteristica> todas) {
+        List<Integer> vector = new ArrayList<>();
+
+        for (Caracteristica c : todas) {
+            int nivel = 0;
+
+            for (PuestoRequisito r : p.getPuestoRequisitos()) {
+                if (r.getIdCaracteristica().getId().equals(c.getId())) {
+                    nivel = r.getNivel() != null ? r.getNivel() : 0;
+                    break;
+                }
+            }
+
+            vector.add(nivel);
+        }
+
+        return vector;
+    }
+
+    @Transactional
+    public List<ResultadoBusqueda> buscarCandidatos(Puesto puesto) {
+
+        List<Oferente> oferentes = serviceOferente.listar();
+        List<Caracteristica> todas = serviceCaracteristica.getHojas();
+
+        List<Integer> vectorPuesto = construirVectorPuesto(puesto, todas);
+
+        List<ResultadoBusqueda> resultados = new ArrayList<>();
+
+        for (Oferente o : oferentes) {
+
+            List<Integer> vectorOferente = construirVectorOferente(o, todas);
+
+            double sim = serviceBusqueda.calcularSimilitudCoseno(vectorOferente, vectorPuesto);
+
+            resultados.add(new ResultadoBusqueda(o, sim * 100));
+        }
+
+        resultados.sort((a, b) -> Double.compare(b.getPorcentaje(), a.getPorcentaje()));
+
+        return resultados;
     }
 
 

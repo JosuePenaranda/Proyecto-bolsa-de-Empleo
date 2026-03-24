@@ -1,7 +1,7 @@
 package com.example.proyectobolsaempleo.presentation.empresa;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 import com.example.proyectobolsaempleo.Services.TipoCambioService;
 import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.logic.*;
@@ -13,15 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Controller
 public class EmpresaController {
 
     @Autowired
     private HttpSession sesion;
+
+    @Autowired
+    private ServiceBusqueda serviceBusqueda;
 
     @Autowired
     private ServiceDatos gestorDatos;
@@ -117,13 +116,30 @@ public class EmpresaController {
                 List<PuestoRequisito> requisitos = gestorDatos.getServicePuesto().getRequisitosDePuesto(idPuesto);
 
                 Map<String, Integer> cumplidos = new HashMap<>();
+                Map<String, Double> porcentajes = new HashMap<>();
+
+                List<Caracteristica> todas =
+                        gestorDatos.getServiceCaracteristica().getHojas();
+
+                // Vector del puesto
+                List<Integer> vectorPuesto = construirVectorPuesto(puesto, todas);
+
                 for (Oferente o : oferentes) {
                     cumplidos.put(o.getIdentificacion(), contarCumplidos(o, requisitos));
+
+                    // Vector oferente
+                    List<Integer> vectorOferente = construirVectorOferente(o, todas);
+
+                    // Similitud coseno
+                    double sim = serviceBusqueda.calcularSimilitudCoseno(vectorOferente, vectorPuesto);
+
+                    porcentajes.put(o.getIdentificacion(), sim * 100);
                 }
 
                 model.addAttribute("puesto", puesto);
                 model.addAttribute("totalRequisitos", requisitos.size());
                 model.addAttribute("cumplidos", cumplidos);
+                model.addAttribute("porcentajes", porcentajes);
             }
 
             model.addAttribute("correoUsuario", sesion.getAttribute("correoUsuario"));
@@ -238,4 +254,41 @@ public class EmpresaController {
         }
     }
 
+    private List<Integer> construirVectorOferente(Oferente o, List<Caracteristica> todas) {
+        List<Integer> vector = new ArrayList<>();
+
+        for (Caracteristica c : todas) {
+            int nivel = 0;
+
+            for (Habilidad h : o.getHabilidads()) {
+                if (h.getIdCaracteristica().getId().equals(c.getId())) {
+                    nivel = h.getNivel() != null ? h.getNivel() : 0;
+                    break;
+                }
+            }
+
+            vector.add(nivel);
+        }
+
+        return vector;
+    }
+
+    private List<Integer> construirVectorPuesto(Puesto p, List<Caracteristica> todas) {
+        List<Integer> vector = new ArrayList<>();
+
+        for (Caracteristica c : todas) {
+            int nivel = 0;
+
+            for (PuestoRequisito r : p.getPuestoRequisitos()) {
+                if (r.getIdCaracteristica().getId().equals(c.getId())) {
+                    nivel = r.getNivel() != null ? r.getNivel() : 0;
+                    break;
+                }
+            }
+
+            vector.add(nivel);
+        }
+
+        return vector;
+    }
 }
