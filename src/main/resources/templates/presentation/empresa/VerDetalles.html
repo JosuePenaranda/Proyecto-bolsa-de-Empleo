@@ -24,79 +24,42 @@
         <h3>Detalle de oferente</h3>
 
         <div class="card-body border p-3">
-
             <div class="col-md-6">
-                <p>Jose Sánchez</p>
+                <p th:text="${oferente.nombre + ' ' + oferente.primerApellido}"></p>
             </div>
-
             <div class="col-md-6">
-                <strong>Identificación:</strong> 12345678
+                <strong>Identificación:</strong> <span th:text="${oferente.identificacion}"></span>
             </div>
-
             <div class="col-md-6">
-                <strong>Email:</strong> jsanchez@sanchez.com
+                <strong>Email:</strong> <span th:text="${oferente.correo}"></span>
             </div>
-
             <div class="col-md-6">
-                <strong>Teléfono:</strong> 45356678
+                <strong>Teléfono:</strong> <span th:text="${oferente.telefono}"></span>
             </div>
-
             <div class="col-md-6">
-                <strong>Residencia:</strong> San José
+                <strong>Residencia:</strong> <span th:text="${oferente.lugarResidencia}"></span>
             </div>
-
         </div>
 
-        </br>
+        <br/>
 
         <table class="table table">
-
             <thead class="table-white bg-dark text-white">
-
             <h5>Habilidades</h5>
-
             <th><b>Característica</b></th>
             <th><b>Nivel</b></th>
-
             </thead>
-
             <tbody>
-
-            <tr>
-                <td>Lenguajes de programación</td>
-                <td>4</td>
-                <td>
-
-            <tr>
-                <td>Java</td>
-                <td>5</td>
-                <td>
-
-            <tr>
-                <td>Tecnologías Web</td>
-                <td>4</td>
-                <td>
-
-            <tr>
-                <td>Modelado</td>
-                <td>5</td>
-                <td>
-
-            <tr>
-                <td>Assertions</td>
-                <td>3</td>
-                <td>
-
-                </td>
+            <tr th:each="habilidad : ${habilidades}">
+                <td th:text="${habilidad.idCaracteristica.nombre}"></td>
+                <td th:text="${habilidad.nivel}"></td>
             </tr>
-
             </tbody>
-
         </table>
 
-        <button class="btn btn-outline-dark btn-sm">
+        <a th:href="@{/empresa/BuscarCandidatos(idPuesto=${idPuesto})}" class="btn btn-outline-dark btn-sm">
             Volver
-        </button>
+        </a>
 
     </div>
 </main>
