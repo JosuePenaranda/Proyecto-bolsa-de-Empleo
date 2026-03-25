@@ -35,6 +35,7 @@
                 <th>Salario</th>
                 <th>Activo</th>
                 <th>Acciones</th>
+                <th>Buscar Candidatos</th>
             </tr>
             </thead>
 
@@ -63,7 +64,8 @@
                             Activar
                         </button>
                     </form>
-
+                </td>
+                <td>
                     <a th:href="@{/empresa/BuscarCandidatos(idPuesto=${puesto.id})}" class="btn btn-primary btn-sm">
                         Buscar Candidatos
                     </a>

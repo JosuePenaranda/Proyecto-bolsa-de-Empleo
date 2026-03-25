@@ -22,7 +22,7 @@
 
           <h5 th:text="${p.idEmpresa.nombre}"></h5>
           <p th:text="${p.descripcion}"></p>
-          <p><b>$ <span th:text="${p.salario}"></span></b></p>
+          <p><b>$ <span th:text="${#numbers.formatDecimal(p.salario,0,'COMMA',2,'POINT')}"></span></b></p>
           <p class="text-muted" style="font-size:13px;">
             <b>₡ <span th:text="${#numbers.formatDecimal(p.salario * tipoCambio.venta, 0, 'COMMA', 2, 'POINT')}"></span></b>
           </p>
