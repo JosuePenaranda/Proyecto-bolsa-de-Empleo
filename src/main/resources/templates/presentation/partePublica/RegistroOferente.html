@@ -64,7 +64,8 @@
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Teléfono</label>
-              <input type="text" name="telefono" placeholder="####-####" pattern="[0-9]+" title="Ingrese solo números" class="form-control">
+              <input type="text" name="telefono" placeholder="####-####" pattern="\d{4}-\d{4}" title="Formato: 1111-1111"
+                     maxlength="9" class="form-control">
             </div>
 
             <div class="col-md-6 mb-3">
