@@ -31,7 +31,7 @@ public class Oferente {
     private String nacionalidad;
 
     @Column(name = "telefono")
-    private Integer telefono;
+    private String telefono;
 
     @Size(max = 100)
     @Column(name = "correo", length = 100)
@@ -54,5 +54,22 @@ public class Oferente {
 
     @OneToMany(mappedBy = "idOferente")
     private Set<Habilidad> habilidads = new LinkedHashSet<>();
+
+    public void setTelefono(String telefono) {
+        if (telefono != null) {
+            telefono = telefono.replaceAll("\\D", "");
+
+            if (telefono.length() == 8) {
+                this.telefono = telefono.substring(0,4) + "-" + telefono.substring(4);
+                return;
+            }
+
+            if (telefono.length() == 9) {
+                this.telefono = "+" + telefono.substring(1) + "-" + telefono.substring(0,4) + "-" + telefono.substring(4);
+                return;
+            }
+        }
+        this.telefono = telefono;
+    }
 
 }

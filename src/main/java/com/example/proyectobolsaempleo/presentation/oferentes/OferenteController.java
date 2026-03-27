@@ -142,7 +142,7 @@ public class OferenteController {
                             @RequestParam String nombre,
                             @RequestParam String primerApellido,
                             @RequestParam String nacionalidad,
-                            @RequestParam Integer telefono,
+                            @RequestParam String telefono,
                             @RequestParam String correo,
                             @RequestParam String lugarResidencia,
                             @RequestParam String clave,
