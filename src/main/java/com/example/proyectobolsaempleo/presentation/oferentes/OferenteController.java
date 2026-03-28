@@ -6,6 +6,7 @@ import com.example.proyectobolsaempleo.logic.*;
 import com.example.proyectobolsaempleo.modelo.ModeloDatos;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -160,7 +161,14 @@ public class OferenteController {
         oferente.setAutorizado(false);
         oferente.setCurriculum(null);
 
-        gestorDatos.getServiceDatos().getServiceOferente().oferenteSave(oferente);
+        try {
+            gestorDatos.getServiceDatos().getServiceOferente().oferenteSave(oferente);
+
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("mensaje", "El correo ya se encuentra registrado");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/Registrooferente";
+        }
 
         model.addAttribute("mensaje", "Registro exitoso, espere aprobación del administrador");
         model.addAttribute("hayMensaje", 1);

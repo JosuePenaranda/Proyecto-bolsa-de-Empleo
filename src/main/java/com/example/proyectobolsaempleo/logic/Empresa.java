@@ -27,7 +27,7 @@ public class Empresa {
     private String localizacion;
 
     @Size(max = 100)
-    @Column(name = "correo", length = 100)
+    @Column(unique=true, name = "correo", length = 100)
     private String correo;
 
     @Size(max = 20)
@@ -47,5 +47,17 @@ public class Empresa {
 
     @OneToMany(mappedBy = "idEmpresa")
     private Set<Puesto> puestos = new LinkedHashSet<>();
+
+    public void setTelefono(String telefono) {
+        if (telefono != null) {
+            telefono = telefono.replaceAll("\\D", "");
+
+            if (telefono.length() == 8) {
+                this.telefono = telefono.substring(0,4) + "-" + telefono.substring(4);
+                return;
+            }
+        }
+        this.telefono = telefono;
+    }
 
 }

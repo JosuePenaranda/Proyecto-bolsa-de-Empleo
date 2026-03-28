@@ -19,7 +19,7 @@ public class Administrador {
     private String identificacion;
 
     @Size(max = 100)
-    @Column(name = "correo", length = 100)
+    @Column(unique = true, name = "correo", length = 100)
     private String correo;
 
     @Size(max = 100)

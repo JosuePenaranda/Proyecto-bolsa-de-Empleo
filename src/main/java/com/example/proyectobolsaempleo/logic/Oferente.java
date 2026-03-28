@@ -34,7 +34,7 @@ public class Oferente {
     private String telefono;
 
     @Size(max = 100)
-    @Column(name = "correo", length = 100)
+    @Column(unique = true, name = "correo", length = 100)
     private String correo;
 
     @Size(max = 100)
@@ -61,11 +61,6 @@ public class Oferente {
 
             if (telefono.length() == 8) {
                 this.telefono = telefono.substring(0,4) + "-" + telefono.substring(4);
-                return;
-            }
-
-            if (telefono.length() == 9) {
-                this.telefono = "+" + telefono.substring(1) + "-" + telefono.substring(0,4) + "-" + telefono.substring(4);
                 return;
             }
         }
