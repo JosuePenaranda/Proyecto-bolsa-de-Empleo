@@ -20,7 +20,7 @@ public class NacionalidadService {
                 Workbook workbook = WorkbookFactory.create(file)
         ) {
 
-            // 🔥 PUNTO 1: validar que exista el archivo
+            // Validar que exista el archivo
             if (file == null) {
                 throw new RuntimeException("No se encontró el archivo nacionalidades.xlsx");
             }
@@ -61,7 +61,7 @@ public class NacionalidadService {
     }
 
     // ==============================
-    // METODOS AUXILIARES (los dejamos igual)
+    // METODOS AUXILIARES
     // ==============================
 
     private static String getString(Cell cell) {
