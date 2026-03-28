@@ -64,8 +64,11 @@
 
             <div class="col-md-6 mb-3">
               <label class="form-label">Teléfono</label>
-              <input type="text" name="telefono" placeholder="####-####" pattern="\d{4}-\d{4}" title="Formato: 1111-1111"
-                     maxlength="9" class="form-control">
+              <input type="text" name="telefono"
+                     placeholder="12345678 o 1234-5678"
+                     pattern="^\d{8}$|^\d{4}-\d{4}$"
+                     title="Formato: 11111111 o 1111-1111"
+                     maxlength="9" class="form-control" inputmode="numeric" required>
             </div>
 
             <div class="col-md-6 mb-3">
@@ -92,14 +95,16 @@
         </form>
 
 
-        <!-- Modal éxito -->
-        <div class="modal fade" id="modalExito" tabindex="-1"
-             th:classappend="${hayMensaje == 1} ? 'show d-block' : ''"
-             th:attr="aria-hidden=${hayMensaje == 1} ? 'false' : 'true'">
+        <!-- Modal -->
+        <div class="modal fade" id="modalMensaje" tabindex="-1"
+             th:classappend="${hayMensaje != null} ? 'show d-block' : ''"
+             th:attr="aria-hidden=${hayMensaje != null} ? 'false' : 'true'">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5">Solicitud enviada</h1>
+                <h1 class="modal-title fs-5"
+                    th:text="${hayMensaje == 1} ? 'Solicitud Enviada' : 'Error'">
+                </h1>
               </div>
               <div class="modal-body">
                 <p th:text="${mensaje}"></p>
@@ -112,7 +117,7 @@
         </div>
 
         <!-- Fondo oscuro -->
-        <div class="modal-backdrop fade show" th:if="${hayMensaje == 1}"></div>
+        <div class="modal-backdrop fade show" th:if="${hayMensaje != null}"></div>
 
       </div>
     </div>
