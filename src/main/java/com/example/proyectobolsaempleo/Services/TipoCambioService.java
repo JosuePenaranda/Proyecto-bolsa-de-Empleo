@@ -29,7 +29,7 @@ public class TipoCambioService {
 
             String body = response.body();
 
-            // 🔥 PARSEO LIMPIO
+            // PARSEO LIMPIO
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(body);
 
