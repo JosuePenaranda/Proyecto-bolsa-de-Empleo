@@ -6,6 +6,8 @@ import java.util.List;
 @Service
 public class ServiceBusqueda {
 
+    // Formula similitud coseno
+
     public double calcularSimilitudCoseno(List<Integer> oferente, List<Integer> puesto) {
         double numerador = 0;
         double sumaOferente = 0;

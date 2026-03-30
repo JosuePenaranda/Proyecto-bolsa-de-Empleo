@@ -7,6 +7,8 @@ public class ModeloDatos {
 
     private ServiceDatos serviceDatos;
 
+    // Se reciben los beans para el contexto de las clases
+
     private ModeloDatos(){
         serviceDatos = SpringContext.getBean(ServiceDatos.class);
     }

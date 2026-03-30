@@ -55,6 +55,9 @@ public class Oferente {
     @OneToMany(mappedBy = "idOferente")
     private Set<Habilidad> habilidads = new LinkedHashSet<>();
 
+    // Se acepta el formato del teléfono 12345678 o 1234-5678
+    // Independientemente de cuál se ingrese, se añade con el formato 1234-5678
+
     public void setTelefono(String telefono) {
         if (telefono != null) {
             telefono = telefono.replaceAll("\\D", "");

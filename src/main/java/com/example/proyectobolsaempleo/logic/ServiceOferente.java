@@ -52,6 +52,8 @@ public class ServiceOferente {
         return oferenteRepository.findById(id).orElse(null);
     }
 
+    //Verificación para saber si ya fueron registrados
+
     public boolean existeCorreo(String correo) {
         return oferenteRepository.existsByCorreo(correo);
     }

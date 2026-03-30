@@ -161,6 +161,8 @@ public class OferenteController {
         oferente.setAutorizado(false);
         oferente.setCurriculum(null);
 
+        //Verificación para saber si ya fueron registrados, en dado caso se despliega un mensaje de error
+
         if (gestorDatos.getServiceDatos().getServiceOferente().existeCorreo(correo)) {
             model.addAttribute("mensaje", "El correo ya está registrado");
             model.addAttribute("hayMensaje", 0);
@@ -182,7 +184,7 @@ public class OferenteController {
         try {
             gestorDatos.getServiceDatos().getServiceOferente().oferenteSave(oferente);
 
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) { // Verificación adicional
             model.addAttribute("mensaje", "El correo, teléfono o identificación ya están registrados");
             model.addAttribute("hayMensaje", 0);
             return "presentation/partePublica/Registrooferente";
