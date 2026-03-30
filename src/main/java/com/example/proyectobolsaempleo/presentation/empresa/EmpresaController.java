@@ -90,11 +90,29 @@ public class EmpresaController {
         empresa.setDescripcion(descripcion);
         empresa.setAutorizado(false);
 
+        if (gestorDatos.getServiceDatos().getServiceEmpresa().existeCorreo(correo)) {
+            model.addAttribute("mensaje", "El correo ya está registrado");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/RegistroEmpresa";
+        }
+
+        if (gestorDatos.getServiceDatos().getServiceEmpresa().existeTelefono(telefono)) {
+            model.addAttribute("mensaje", "El teléfono ya está registrado");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/RegistroEmpresa";
+        }
+
+        if (gestorDatos.getServiceDatos().getServiceEmpresa().existeNombre(nombre)) {
+            model.addAttribute("mensaje", "El nombre de la empresa ya está registrado");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/RegistroEmpresa";
+        }
+
         try {
             gestorDatos.getServiceDatos().getServiceEmpresa().empresaSave(empresa);
 
         } catch (DataIntegrityViolationException e){
-            model.addAttribute("mensaje", "El correo ya se encuentra registrado");
+            model.addAttribute("mensaje", "El correo, teléfono o nombre ya están registrados");
             model.addAttribute("hayMensaje", 0);
             return "presentation/partePublica/RegistroEmpresa";
 

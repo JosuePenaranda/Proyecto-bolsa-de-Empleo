@@ -15,7 +15,7 @@ import java.util.Set;
 public class Oferente {
     @Id
     @Size(max = 50)
-    @Column(name = "identificacion", nullable = false, length = 50)
+    @Column(unique = true, name = "identificacion", nullable = false, length = 50)
     private String identificacion;
 
     @Size(max = 100)
@@ -30,7 +30,7 @@ public class Oferente {
     @Column(name = "nacionalidad", length = 50)
     private String nacionalidad;
 
-    @Column(name = "telefono")
+    @Column(unique = true, name = "telefono")
     private String telefono;
 
     @Size(max = 100)

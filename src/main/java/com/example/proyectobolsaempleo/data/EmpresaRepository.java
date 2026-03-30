@@ -12,4 +12,9 @@ public interface EmpresaRepository extends CrudRepository<Empresa, String> {
 
     List<Empresa> findByAutorizado(Boolean autorizado);
 
+    boolean existsByCorreo(String correo);
+
+    boolean existsByTelefono(String telefono);
+
+    boolean existsByNombre(String nombre);
 }
