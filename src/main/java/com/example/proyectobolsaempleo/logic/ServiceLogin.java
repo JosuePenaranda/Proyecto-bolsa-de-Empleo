@@ -4,8 +4,6 @@ import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.data.*;
 import org.springframework.beans.factory.annotation.*;
 
-import java.util.LinkedList;
-
 @org.springframework.stereotype.Service("serviceLogin")
 public class ServiceLogin {
     @Autowired

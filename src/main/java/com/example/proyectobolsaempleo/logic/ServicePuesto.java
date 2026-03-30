@@ -120,6 +120,8 @@ public class ServicePuesto {
         }
     }
 
+    // Contruye un vector con todas las características y niveles del oferente
+
     private List<Integer> construirVectorOferente(Oferente o, List<Caracteristica> todas) {
         List<Integer> vector = new ArrayList<>();
 
@@ -139,6 +141,8 @@ public class ServicePuesto {
         return vector;
     }
 
+    // Contruye un vector con todas las características y niveles del puesto
+
     private List<Integer> construirVectorPuesto(Puesto p, List<Caracteristica> todas) {
         List<Integer> vector = new ArrayList<>();
 
@@ -157,6 +161,8 @@ public class ServicePuesto {
 
         return vector;
     }
+
+    // Hace una llamada a la formula de similitud coseno para hacer el cálculo
 
     @Transactional
     public List<ResultadoBusqueda> buscarCandidatos(Puesto puesto) {

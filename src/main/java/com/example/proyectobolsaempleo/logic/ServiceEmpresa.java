@@ -30,6 +30,8 @@ public class ServiceEmpresa {
         return (List<Empresa>) empresaRepository.findAll();
     }
 
+    //Verificación para saber si ya fueron registrados
+
     public boolean existeCorreo(String correo) {
         return empresaRepository.existsByCorreo(correo);
     }

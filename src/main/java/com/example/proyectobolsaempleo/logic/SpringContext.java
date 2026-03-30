@@ -3,6 +3,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+// Permite que Modelo datos pueda recibir los beans necesarios para el contexto de spring
+
 @Component
 public class SpringContext implements ApplicationContextAware {
 

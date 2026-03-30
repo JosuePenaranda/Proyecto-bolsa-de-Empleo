@@ -12,6 +12,8 @@ public interface EmpresaRepository extends CrudRepository<Empresa, String> {
 
     List<Empresa> findByAutorizado(Boolean autorizado);
 
+    //Verificación para saber si ya fueron registrados
+
     boolean existsByCorreo(String correo);
 
     boolean existsByTelefono(String telefono);

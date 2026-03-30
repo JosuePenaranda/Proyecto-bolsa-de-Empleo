@@ -90,6 +90,8 @@ public class EmpresaController {
         empresa.setDescripcion(descripcion);
         empresa.setAutorizado(false);
 
+        //Verificación para saber si ya fueron registrados, en dado caso despliega un mensaje de error
+
         if (gestorDatos.getServiceDatos().getServiceEmpresa().existeCorreo(correo)) {
             model.addAttribute("mensaje", "El correo ya está registrado");
             model.addAttribute("hayMensaje", 0);
@@ -111,7 +113,7 @@ public class EmpresaController {
         try {
             gestorDatos.getServiceDatos().getServiceEmpresa().empresaSave(empresa);
 
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e){ // Verificación adicional
             model.addAttribute("mensaje", "El correo, teléfono o nombre ya están registrados");
             model.addAttribute("hayMensaje", 0);
             return "presentation/partePublica/RegistroEmpresa";
@@ -277,6 +279,8 @@ public class EmpresaController {
         }
     }
 
+    // Crea un vector con las características y niveles del oferente
+
     private List<Integer> construirVectorOferente(Oferente o, List<Caracteristica> todas) {
         List<Integer> vector = new ArrayList<>();
 
@@ -295,6 +299,8 @@ public class EmpresaController {
 
         return vector;
     }
+
+    // Crea un vector con las características y niveles del puesto
 
     private List<Integer> construirVectorPuesto(Puesto p, List<Caracteristica> todas) {
         List<Integer> vector = new ArrayList<>();
