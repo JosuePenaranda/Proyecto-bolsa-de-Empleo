@@ -12,4 +12,9 @@ public interface OferenteRepository extends CrudRepository<Oferente, String> {
 
     List<Oferente> findByAutorizado(Boolean autorizado);
 
+    boolean existsByCorreo(String correo);
+
+    boolean existsByTelefono(String telefono);
+
+    boolean existsByIdentificacion(String identificacion);
 }

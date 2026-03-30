@@ -161,11 +161,29 @@ public class OferenteController {
         oferente.setAutorizado(false);
         oferente.setCurriculum(null);
 
+        if (gestorDatos.getServiceDatos().getServiceOferente().existeCorreo(correo)) {
+            model.addAttribute("mensaje", "El correo ya está registrado");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/Registrooferente";
+        }
+
+        if (gestorDatos.getServiceDatos().getServiceOferente().existeTelefono(telefono)) {
+            model.addAttribute("mensaje", "El teléfono ya está registrado");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/Registrooferente";
+        }
+
+        if (gestorDatos.getServiceDatos().getServiceOferente().existeIdentificacion(identificacion)) {
+            model.addAttribute("mensaje", "La identificación ya está registrada");
+            model.addAttribute("hayMensaje", 0);
+            return "presentation/partePublica/Registrooferente";
+        }
+
         try {
             gestorDatos.getServiceDatos().getServiceOferente().oferenteSave(oferente);
 
         } catch (DataIntegrityViolationException e) {
-            model.addAttribute("mensaje", "El correo ya se encuentra registrado");
+            model.addAttribute("mensaje", "El correo, teléfono o identificación ya están registrados");
             model.addAttribute("hayMensaje", 0);
             return "presentation/partePublica/Registrooferente";
         }

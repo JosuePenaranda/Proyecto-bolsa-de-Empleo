@@ -1,17 +1,13 @@
 package com.example.proyectobolsaempleo.logic;
 
-import com.example.proyectobolsaempleo.Util.PasswordUtil;
 import com.example.proyectobolsaempleo.data.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
 import java.util.List;
 
 @org.springframework.stereotype.Service("serviceOferente")
@@ -54,5 +50,17 @@ public class ServiceOferente {
 
     public Oferente buscarPorId(String id) {
         return oferenteRepository.findById(id).orElse(null);
+    }
+
+    public boolean existeCorreo(String correo) {
+        return oferenteRepository.existsByCorreo(correo);
+    }
+
+    public boolean existeTelefono(String telefono) {
+        return oferenteRepository.existsByTelefono(telefono);
+    }
+
+    public boolean existeIdentificacion(String identificacion) {
+        return oferenteRepository.existsByIdentificacion(identificacion);
     }
 }

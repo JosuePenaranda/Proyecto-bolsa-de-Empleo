@@ -19,7 +19,7 @@ public class Empresa {
     private Integer id;
 
     @Size(max = 100)
-    @Column(name = "nombre", length = 100)
+    @Column(unique = true, name = "nombre", length = 100)
     private String nombre;
 
     @Size(max = 100)
@@ -31,7 +31,7 @@ public class Empresa {
     private String correo;
 
     @Size(max = 20)
-    @Column(name = "telefono", length = 20)
+    @Column(unique = true, name = "telefono", length = 20)
     private String telefono;
 
     @Lob
