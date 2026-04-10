@@ -8,7 +8,4 @@ import java.util.List;
 public interface CaracteristicaRepository extends CrudRepository<Caracteristica, Integer> {
     List<Caracteristica> findByIdPadreIsNull();
     List<Caracteristica> findByIdPadre(Caracteristica padre);
-
-    @Query("SELECT c FROM Caracteristica c WHERE c.caracteristicas IS EMPTY")
-    List<Caracteristica> obtenerNodosFinales();
 }

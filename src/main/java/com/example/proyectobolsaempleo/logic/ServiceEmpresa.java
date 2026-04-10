@@ -26,10 +26,6 @@ public class ServiceEmpresa {
         }
     }
 
-    public List<Empresa> listar() {
-        return (List<Empresa>) empresaRepository.findAll();
-    }
-
     //Verificación para saber si ya fueron registrados
 
     public boolean existeCorreo(String correo) {
