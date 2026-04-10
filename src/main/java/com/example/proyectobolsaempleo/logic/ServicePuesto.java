@@ -38,10 +38,6 @@ public class ServicePuesto {
         return puestoRepository.findById(id).orElse(null);
     }
 
-    public void guardarPuesto(Puesto puesto) {
-        puestoRepository.save(puesto);
-    }
-
     public void guardarPuestoConRequisitos(Puesto puesto,
                                            List<Integer> ids,
                                            List<Integer> niveles) {
@@ -66,10 +62,6 @@ public class ServicePuesto {
         puesto.setActivo(true);
 
         puestoRepository.save(puesto);
-    }
-
-    public List<Puesto> getTodos() {
-        return (List<Puesto>) puestoRepository.findAll();
     }
 
     public List<Puesto> getTop5Publicos() {

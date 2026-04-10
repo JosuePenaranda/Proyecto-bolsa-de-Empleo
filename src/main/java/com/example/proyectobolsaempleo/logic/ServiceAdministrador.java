@@ -14,10 +14,6 @@ public class ServiceAdministrador {
     @Autowired
     private AdminRepository adminRepository;
 
-    public List<Administrador> listar() {
-        return (List<Administrador>) adminRepository.findAll();
-    }
-
     public Administrador buscarPorId(String id) {
         return adminRepository.findById(id).orElse(null);
     }

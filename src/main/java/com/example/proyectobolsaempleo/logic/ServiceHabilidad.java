@@ -23,9 +23,6 @@ public class ServiceHabilidad {
         return habilidadRepository.findByIdOferenteAndIdCaracteristica(oferente, caracteristica) != null;
     }
 
-    public Habilidad buscarPorId(Integer id) {
-        return habilidadRepository.findById(id).orElse(null);
-    }
 
     public void actualizar(Integer id, Integer nuevoNivel) {
         Habilidad h = habilidadRepository.findById(id).orElse(null);
