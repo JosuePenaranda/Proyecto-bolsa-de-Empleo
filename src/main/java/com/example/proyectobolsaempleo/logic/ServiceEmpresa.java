@@ -32,10 +32,6 @@ public class ServiceEmpresa {
         return empresaRepository.existsByCorreo(correo);
     }
 
-    public boolean existeTelefono(String telefono) {
-        return empresaRepository.existsByTelefono(telefono);
-    }
-
     public boolean existeNombre(String nombre) {
         return empresaRepository.existsByNombre(nombre);
     }

@@ -82,7 +82,7 @@ public class AdminController {
     public String crearCaracteristica(@RequestParam String nombre,
                                       @RequestParam(required = false) Integer idPadre,
                                       @RequestParam(required = false) Integer actualId) {
-
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         gestorDatos.getServiceDatos().getServiceCaracteristica()
                 .crearCaracteristica(nombre, idPadre);
 
@@ -111,7 +111,7 @@ public class AdminController {
     // Aprobar Empresa
     @PostMapping("/administrador/aprobarEmpresa")
     public String aprobarEmpresa(@RequestParam String id) {
-
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         gestorDatos.getServiceDatos().getServiceEmpresa().aprobarEmpresa(id);
 
         return "redirect:/administrador/AdminEmpresasPendientes";
@@ -136,7 +136,7 @@ public class AdminController {
     // Aprobar Oferente
     @PostMapping("/administrador/aprobarOferente")
     public String aprobarOferente(@RequestParam String id) {
-
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         gestorDatos.getServiceDatos().getServiceOferente().aprobarOferente(id);
 
         return "redirect:/administrador/AdminOferentesPendientes";
