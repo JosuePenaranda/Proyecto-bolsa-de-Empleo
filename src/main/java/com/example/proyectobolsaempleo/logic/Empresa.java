@@ -31,7 +31,7 @@ public class Empresa {
     private String correo;
 
     @Size(max = 20)
-    @Column(unique = true, name = "telefono", length = 20)
+    @Column(name = "telefono", length = 20)
     private String telefono;
 
     @Lob

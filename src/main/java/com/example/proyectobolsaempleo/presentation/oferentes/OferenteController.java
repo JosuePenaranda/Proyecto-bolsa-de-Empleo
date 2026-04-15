@@ -68,6 +68,7 @@ public class OferenteController {
     @PostMapping("/oferentes/habilidades")
     public String agregarHabilidad(@RequestParam Integer idCaracteristica,
                                    @RequestParam Integer nivel) {
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         Oferente oferente = (Oferente) sesion.getAttribute("usuario");
         Caracteristica caracteristica = gestorDatos.getServiceDatos().getServiceCaracteristica().findById(idCaracteristica);
 
@@ -90,6 +91,7 @@ public class OferenteController {
     @PostMapping("/oferentes/actualizarHabilidad")
     public String actualizarHabilidad(@RequestParam Integer idHabilidad,
                                       @RequestParam Integer nivel) {
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         gestorDatos.getServiceDatos().getServiceHabilidad().actualizar(idHabilidad, nivel);
         return "redirect:/oferentes/habilidades";
     }
@@ -110,6 +112,7 @@ public class OferenteController {
     // Subir CV
     @PostMapping("/oferentes/cv")
     public String subirCV(@RequestParam("archivo") MultipartFile archivo, Model model) {
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         Oferente oferente = (Oferente) sesion.getAttribute("usuario");
 
         try {

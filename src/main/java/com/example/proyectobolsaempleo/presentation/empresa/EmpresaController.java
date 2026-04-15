@@ -98,12 +98,6 @@ public class EmpresaController {
             return "presentation/partePublica/RegistroEmpresa";
         }
 
-        if (gestorDatos.getServiceDatos().getServiceEmpresa().existeTelefono(telefono)) {
-            model.addAttribute("mensaje", "El teléfono ya está registrado");
-            model.addAttribute("hayMensaje", 0);
-            return "presentation/partePublica/RegistroEmpresa";
-        }
-
         if (gestorDatos.getServiceDatos().getServiceEmpresa().existeNombre(nombre)) {
             model.addAttribute("mensaje", "El nombre de la empresa ya está registrado");
             model.addAttribute("hayMensaje", 0);
@@ -198,12 +192,14 @@ public class EmpresaController {
 
     @PostMapping("/empresa/DesactivarPuesto")
     public String desactivarPuesto(@RequestParam Integer id) {
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         gestorDatos.getServiceDatos().getServicePuesto().desactivarPuesto(id);
         return "redirect:/empresa/MisPuestos";
     }
 
     @PostMapping("/empresa/ActivarPuesto")
     public String activarPuesto(@RequestParam Integer id) {
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
         gestorDatos.getServiceDatos().getServicePuesto().activarPuesto(id);
         return "redirect:/empresa/MisPuestos";
     }
@@ -232,6 +228,8 @@ public class EmpresaController {
             @RequestParam(value = "caracteristicas[]", required = false) List<Integer> caracteristicas,
             @RequestParam(value = "niveles[]", required = false) List<Integer> niveles,
             Model model) {
+
+        if (sesion.getAttribute("usuario") == null) return "redirect:/empresa/Puestosrecienregistrados";
 
         // Validar repetidas
         Set<Integer> sinRepetidas = new HashSet<>(caracteristicas);

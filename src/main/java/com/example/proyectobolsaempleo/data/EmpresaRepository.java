@@ -16,7 +16,5 @@ public interface EmpresaRepository extends CrudRepository<Empresa, String> {
 
     boolean existsByCorreo(String correo);
 
-    boolean existsByTelefono(String telefono);
-
     boolean existsByNombre(String nombre);
 }
